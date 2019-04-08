@@ -1,6 +1,9 @@
 #Confugurando el espacio de trabajo
 rm(list = ls())
-setwd("C:/Users/juank/Desktop/Trabajos-en-R/Estadistica/LLANOS_RUIZ_TAREA1")
+#setwd("C:/Users/juank/Desktop/Trabajos-en-R/Estadistica/LLANOS_RUIZ_TAREA1")
+# en linux
+setwd("~/Desktop/Trabajos-en-R/Estadistica/LLANOS_RUIZ_TAREA1")
+
 projects_df <- read.csv(file="ks_projects_201801.csv",header = TRUE,sep = ',')
 #-----------------------------------
 #Funciones
@@ -39,24 +42,24 @@ rownames(matrizAD) <- c("Todas propuestas","Prop. exitosas", "Prop fallidas",
 
 #Graficas
 #histogramas
-ha <- hist(usd_PR_all,main = "Histograma de dinero prometido en proyectos",
+ha <- hist(usd_PR_all,main = "Histograma de dinero comprometido en proyectos",
            xlab = "Pledged amount in USD",
            ylab = "Frequency")
-hs <- hist(succesful_proj, main ="Histograma de dinero prometido en proyectos exitosos",
+hs <- hist(succesful_proj, main ="Histograma de dinero comprometido en proyectos exitosos",
            xlab = "Pledged amount in USD",
            ylab = "Frequency")
-hf <- hist(failed_proj, main ="Histograma de dinero prometido en proyectos fallidos",
+hf <- hist(failed_proj, main ="Histograma de dinero comprometido en proyectos fallidos",
            xlab = "Pledged amount in USD",
            ylab = "Frequency")
 
 
-hsa <- hist(software_proj, main = "Histograma de dinero prometido en proyectos de software",
+hsa <- hist(software_proj, main = "Histograma de dinero comprometido en proyectos de software",
            xlab = "Pledged amount in USD",
            ylab = "Frequency")
-hss <- hist(soft_succes_proj, main = "Histograma de dinero prometido en proyectos de software exitosos",
+hss <- hist(soft_succes_proj, main = "Histograma de dinero comprometido en proyectos de software exitosos",
             xlab = "Pledged amount in USD",
             ylab = "Frequency")
-hsf <- hist(soft_fail_proj, main = "Histograma de dinero prometido en proyectos de software fallidos",
+hsf <- hist(soft_fail_proj, main = "Histograma de dinero comprometido en proyectos de software fallidos",
             xlab = "Pledged amount in USD",
             ylab = "Frequency")
 
@@ -73,3 +76,25 @@ b2 <- boxplot(software_proj, soft_succes_proj, soft_fail_proj,names= c("USD pled
 IC_all <- IC(software_proj,0.05)
 IC_suc <- IC(soft_succes_proj,0.05)
 IC_fail <- IC(soft_fail_proj,0.05)
+
+#c)
+#Comparar las medias de las propuestas de software exitosas contra las fallidas
+
+# Hipótesis nula: mu_soft_ exitosas  - mu_soft_fallidas = 0
+# Hipotesis alternativa: mu_soft exitosas - mu_soft_fallidas < 0 (más propuestas fallidas que exitosas)
+# Estadistico de prueba: deltaProm = XBarra - YBarra
+
+XBarra <- sum(soft_succes_proj)/length(soft_succes_proj)
+YBarra <- sum(soft_fail_proj)/length(soft_fail_proj)
+V_xBarra <- var(soft_succes_proj)/length(soft_succes_proj)
+V_yBarra <-  var(soft_fail_proj)/length(soft_fail_proj)
+
+
+
+deltaProm <- XBarra - YBarra
+sd_diff_mu <- (V_xBarra + V_yBarra)**0.5
+
+# RR: {deltaMu: deltaMu < 0} = {X - Y:  tq deltaMu - z_0.95*sd(deltaMu)
+k <- deltaProm - qnorm(0.95)*sd_diff_mu
+
+
