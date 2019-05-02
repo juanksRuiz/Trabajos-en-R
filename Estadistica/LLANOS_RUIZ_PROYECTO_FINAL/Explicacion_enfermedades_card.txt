@@ -1,0 +1,87 @@
+
+base de datos de Cleveland con pacientes con enfermedades cardio vasc
+
+Todas las variables influencian en enfermedad cardoi vascular.
+ (hombre mas propenso a enfermarse)
+
+
+----------
+- cp: chest pain type (4 valores)
+1: angina típica
+2: angina atípica
+3: dolor no anginal
+4: asintomático
+
+- trestbps: presión arterial en reposo (al ingresar al hospital en mm Hg (milimetros de mercurio))
+
+- chol: suero (nivel) colesteral en mg/dl
+
+- fbs: fasting blood sugar(niveles de azucar en la sangre)
+1 (True): si es mayor a 120 mg/dl
+0: (False): si es menor a 120 mg/dl
+
+- restecg: resting electrocardiographic results
+0: normal
+1: si tiene  anormalidades de ondas ST-T  (T wave inversions and/or ST elevation or depression of > 0.05 mV)
+---> ST: que el lado izquierdo del corazon se infarto
+2: showing probable or definite left ventricular hypertrophy by Estes' criteria
+
+- thalch: maxima frecuancia cardiaca alcanzada
+
+- exang: angina inducida por ejercicio (boolean)
+angina: enfermedad cardiaca de las arterias coronarias. Ocurre cuando una sustancia placa se acumula en las arterias que llevan la sangre al corazón
+1: True
+0: False
+
+https://en.wikipedia.org/wiki/ST_segment
+- oldpeak: ST depresion induced by exercise relative to rest
+Si se derpimida entonces el paciente está en un infarto
+(la onda deberia estar subida, si se baja hay problemas. Dependiendo de lo hundida que esté se mira que tan grave es el infarto)
+
+--> por ejercicio relativo a repóso
+
+Todos los valores son de infarto: 1: menos grave a 3: mas grave
+
+INFARTO: EL CORAZON SE INFLAMA, DUELE: --> CAMBIA LA ONDA ST
+
+- slope: the slope of the peak exercise ST segment
+	mide la depresion del pico de la onda pero con 	ejercicio mas intenso
+
+-ca: numero de vasos en fluoroscopia comprometidos: a mayor # de vasos peor. Con una imagen se ve que vasos estan taponados
+(el compromiso en general es de 0 a 3 vasos: si es mas de 3 el paciente ya está mal)
+
+- se le inyecta un consatraste al paciente para fluoroscopia
+--> en caso de obstruccion no pasa el contraste correctamente.
+
+
+- thal:
+3: normal
+6: defecto fijo
+7: defecto reversible
+https://www.youtube.com/watch?v=ilRSXbzonw4
+
+De los vasos que se encontraron: el 3 significa que fueron normales, 6 que el defecto fue obstructivo, 7: defecto reversible
+
+- target: Si tiene enfermedad cardio vascular 
+
+-------------------------------
+hacer un analisis descriptivo
+sacar todas las medidas de tendencia, dispersion
+----> Que tipó de distribucion que tienen esos datos: (normal ? anormal ?)
+
+obj:
+
+IMP: target:
+Cruzar con los que no tuvieron enfermedad carsio vascular.
+
+Separar grupos: los que la tienen y los que no
+
+Cuales son los factores de riesgo SIGNIFICATIVOS asicoaidos a la presencia de enfermedades cardiovascular
+
+Hipotesis nula: x valores son importantes en la enfermedades cardiovasculares.
+
+Hipotesis alternativa: x variables no son importantes en las enfermedades cardio vasculares.
+
+2o paso: mirar normalidad de los datos(distribucion)
+- separar los que si tienen enfermedad cardio vascular y los que no
+
