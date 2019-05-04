@@ -6,11 +6,11 @@ Todas las variables influencian en enfermedad cardoi vascular.
 
 
 ----------
-- cp: chest pain type (4 valores)
-1: angina típica
-2: angina atípica
-3: dolor no anginal
-4: asintomático
+- cp (CATEGORICO): chest pain type (4 valores) 
+0: angina típica
+1: angina atípica
+2: dolor no anginal
+3: asintomático
 
 - trestbps: presión arterial en reposo (al ingresar al hospital en mm Hg (milimetros de mercurio))
 
@@ -20,7 +20,7 @@ Todas las variables influencian en enfermedad cardoi vascular.
 1 (True): si es mayor a 120 mg/dl
 0: (False): si es menor a 120 mg/dl
 
-- restecg: resting electrocardiographic results
+- restecg (CATEGORICO): resting electrocardiographic results 
 0: normal
 1: si tiene  anormalidades de ondas ST-T  (T wave inversions and/or ST elevation or depression of > 0.05 mV)
 ---> ST: que el lado izquierdo del corazon se infarto
@@ -47,14 +47,14 @@ INFARTO: EL CORAZON SE INFLAMA, DUELE: --> CAMBIA LA ONDA ST
 - slope: the slope of the peak exercise ST segment
 	mide la depresion del pico de la onda pero con 	ejercicio mas intenso
 
--ca: numero de vasos en fluoroscopia comprometidos: a mayor # de vasos peor. Con una imagen se ve que vasos estan taponados
+-ca (CATEGORICO): numero de vasos en fluoroscopia comprometidos: a mayor # de vasos peor. Con una imagen se ve que vasos estan taponados
 (el compromiso en general es de 0 a 3 vasos: si es mas de 3 el paciente ya está mal)
 
 - se le inyecta un consatraste al paciente para fluoroscopia
 --> en caso de obstruccion no pasa el contraste correctamente.
 
 
-- thal:
+- thal (CATEGORICO):
 3: normal
 6: defecto fijo
 7: defecto reversible
