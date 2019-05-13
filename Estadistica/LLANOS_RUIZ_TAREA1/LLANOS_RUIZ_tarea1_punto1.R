@@ -22,6 +22,7 @@ IC <- function(datos,alfa){
   return(c(lowerLimit,upperLimit))
 }
 
+AD(soft_fail_proj)
 #----------------------------------------
 # a)
 usd_PR_all <- projects_df$usd_pledged_real
