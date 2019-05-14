@@ -47,6 +47,8 @@ INFARTO: EL CORAZON SE INFLAMA, DUELE: --> CAMBIA LA ONDA ST
 - slope: the slope of the peak exercise ST segment
 	mide la depresion del pico de la onda pero con 	ejercicio mas intenso
 
+Value 1: upsloping -- Value 2: flat -- Value 3: downsloping
+
 -ca (CATEGORICO): numero de vasos en fluoroscopia comprometidos: a mayor # de vasos peor. Con una imagen se ve que vasos estan taponados
 (el compromiso en general es de 0 a 3 vasos: si es mas de 3 el paciente ya está mal)
 
