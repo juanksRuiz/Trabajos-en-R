@@ -1,7 +1,7 @@
 
 # Leer archivo 
-bd <- read.csv("C:/Users/user/Desktop/Universidad/4to semestre/Estad?stica/Proyecto/heart.csv", 
-               header= TRUE,sep = "," , quote = "\"", dec = "." , fill = TRUE)
+#bd <- read.csv("C:/Users/user/Desktop/Universidad/4to semestre/Estad?stica/Proyecto/heart.csv", 
+#               header= TRUE,sep = "," , quote = "\"", dec = "." , fill = TRUE)
 
 #Leer archivo en Hipathia: solo comente esta linea si está en otro pc
 bd <- read.csv("/home/hipatia/Desktop/Trabajos-en-R/Estadistica/LLANOS_RUIZ_PROYECTO_FINAL/heart.csv",
