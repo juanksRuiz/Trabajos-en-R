@@ -90,9 +90,7 @@ lines(density(bdEnfermos$age), col="red",lwd=2)
 # linea de densidad suavizada
 lines(density(bdEnfermos$age, adjust=2), lty="dotted")
 
-hist(bdEnfermos$sex , main = "Sexo enfermos")  # NO
 
-#hist(bdEnfermos$cp,main = "Dolor de pecho enfermos") # NO - CATEGORICA 
 
 #Histograma de presion en reposo
 hist(bdEnfermos$trestbps, main = "Presion reposo enfermos", prob=TRUE) # si
@@ -115,9 +113,9 @@ lines(density(bdEnfermos$chol, adjust=2), lty="dotted")
 #Histograma maxima frecuencia cardiaca
 hist(bdEnfermos$thalach,main = "Max frecuencia cardiaca enfermos", prob = TRUE) #si
 # linea de densidad
-lines(density(bdEnfermos$thalach), col="blue",lwd=2)
+#lines(density(bdEnfermos$thalach), col="blue",lwd=2)
 # linea de densidad suavizada
-lines(density(bdEnfermos$thalach, adjust=2), lty="dotted")
+lines(density(bdEnfermos$thalach, adjust=2),,col = "red")
 
 #Histograma  de depresion ST en descanso de enfermos
 hist(bdEnfermos$oldpeak, main = "Depresion ST descanso enfermos", prob = TRUE) # si - CHI - CUADRADA
@@ -313,15 +311,46 @@ pairs(noenfermos, pch = 18)
       #H0 : enf_chol - nenf_chol  = 0       Est. P : xb - yb
       #Ha : enf_chol - nenf_chol != 0       RR = {} U {}
       
+  
+      
+      
+      
     
+                                                                  # Entering the data
+t.test(enf_chol - nenf_chol,alternative="two.sided",conf.level=0.95)     
       
-      
-      
-
 
 # MODELOS LINEALES
+# DESCARTADAS
+# thal
+# restecg
+
+#UTILES
+# ca: numero de vasos en fluoroscopia comprometidos: a mayor # de vasos peor.
+# cp: dolor de pecho:
+#0: angina típica
+#1: angina atípica
+#2: dolor no anginal
+#3: asintomático
+
+# oldpeak: ST depresion induced by exercise relative to rest
+
+
+# (1) colesterol en funcion de presion arterial para los enfermos 
+#   para hombre y para mujeres
+#   a los que tuvieron angina inducida por ejercicio con los que no
+#   Con fbs: (nivel de azucar > 120mg/dl)
+
+# (2) frecuencia cardiaca en funcion de la presion arterial (sobra  ?)
+# (3) frecuencia cardiaca en funcion del colesterol)
+# (4) depresion ST respecto a la presion arterial
+# (5) depresion ST respecto al colesterol               (oldpeak)
+
+
 
 # HIPOTESIS RESPECTO A LAS DISTRIBUCIONES
+
+
 
 # CONCLUSIONES
 
