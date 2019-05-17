@@ -4,12 +4,18 @@
 #               header= TRUE,sep = "," , quote = "\"", dec = "." , fill = TRUE)
 
 #Leer archivo en Hipathia: solo comente esta linea si está en otro pc
-bd <- read.csv("/home/hipatia/Desktop/Trabajos-en-R/Estadistica/LLANOS_RUIZ_PROYECTO_FINAL/heart.csv",
-               header= TRUE,sep = "," , quote = "\"", dec = "." , fill = TRUE)
+#bd <- read.csv("/home/hipatia/Desktop/Trabajos-en-R/Estadistica/LLANOS_RUIZ_PROYECTO_FINAL/heart.csv",
+#               header= TRUE,sep = "," , quote = "\"", dec = "." , fill = TRUE)
 
+#Leer archivo pc Ruiz
+#setwd("\\Desktop\\Trabajos-en-R\\Estadistica\\LLANOS_RUIZ_PROYECTO_FINAL\\")
+bd <- read.csv("heart.csv",header= TRUE, sep = ",")
 # Ver la tabla 
 View(bd)
 attach(bd)
+names(bd)[names(bd) == "�..age"] <- "age"
+names(bdEnfermos)[names(bdEnfermos) == "�..age"] <- "age"
+names(bdNoEnfermos)[names(bdNoEnfermos) == "�..age"] <- "age"
 
 # Resumen de los atributos de la tabla 
 summary(bd)
@@ -72,14 +78,12 @@ enfermos <- bd$target == 1
 bdEnfermos <- subset(bd,enfermos)
 View(bdEnfermos)
 pairs(bdEnfermos)
-plot(bdEnfermos$oldpeak,bdEnfermos$chol)
 
 #plots no enfermos
 noEnfermos <- bd$target == 0;
 bdNoEnfermos <- subset(bd,noEnfermos) 
 View(bdNoEnfermos)
 pairs(bdNoEnfermos)
-plot(bdNoEnfermos$oldpeak,bdNoEnfermos$chol)
 #----------------------------------------------------
 # HISTOGRAMAS ENFERMOS
 
@@ -125,15 +129,6 @@ lines(density(bdEnfermos$oldpeak), col="blue",lwd=2)
 lines(density(bdEnfermos$oldpeak, adjust=2), lty="dotted")
 
 
-hist(bdEnfermos$thal,main = "Tipo de defecto enfermos") # NO
-
-
-
-X <- c(rep(65, times=5), rep(25, times=5), rep(35, times=10), rep(45, times=4))
-hist(X, prob=TRUE, col="grey")# prob=TRUE for probabilities not counts
-lines(density(X), col="blue", lwd=2) # add a density estimate with defaults
-lines(density(X, adjust=2), lty="dotted", col="darkgreen", lwd=2) 
-
 
 #HISTOGRAMAS NO ENFERMOS
 hist(bdEnfermos$age,main = "Edad  NO enfermos") # si
@@ -149,10 +144,10 @@ hist(bdEnfermos$thal,main = "Tipo de defecto NO enfermos") # NO
 
 
 # cp: tipo de dolor
-#0: angina típica
-#1: angina atípica
+#0: angina tipica
+#1: angina atipica
 #2: dolor no anginal
-#3: asintomático
+#3: asintomatico
 # falta
 #ST depression induced by exercise relative to rest
 hist(bdEnfermos$oldpeak)
@@ -216,7 +211,7 @@ plot(?..age,thalach,
      xlab = "Edad",
      ylab = "Frecuencia cardiaca maxima")         
 
-modelo2 <- lm(thalach~?..age)
+modelo2 <- lm(thalach~bd$age)
 summary(modelo2)
 abline(modelo2)
 
@@ -227,12 +222,6 @@ cor(thal,thalach)
 cor(thal,chol)
 cor(thalach,age)
 cor(age,cp)
-cor(thalach,chol)
-cor(thalach,chol)
-cor(thalach,chol)
-cor(thalach,chol)
-cor(thalach,chol)
-cor(thalach,chol)
 cor(thalach,chol)
 
 pairs(bd)
@@ -328,24 +317,96 @@ t.test(enf_chol - nenf_chol,alternative="two.sided",conf.level=0.95)
 #UTILES
 # ca: numero de vasos en fluoroscopia comprometidos: a mayor # de vasos peor.
 # cp: dolor de pecho:
-#0: angina típica
-#1: angina atípica
+#0: angina tipica
+#1: angina atipica
 #2: dolor no anginal
 #3: asintomático
 
 # oldpeak: ST depresion induced by exercise relative to rest
 
 
-# (1) colesterol en funcion de presion arterial para los enfermos 
-#   para hombre y para mujeres
-#   a los que tuvieron angina inducida por ejercicio con los que no
-#   Con fbs: (nivel de azucar > 120mg/dl)
+# (1) colesterol en funcion de presion arterial
+#   En general para enfermos y sanos
+
+#ENFERMOS
+fit11 <- lm(bdEnfermos$trestbps~bdEnfermos$chol, data = bdEnfermos)
+plot(bd$trestbps,bd$chol)
+#abline(fit11)
+summary(fit11)
+#SANOS
+fit12 <- lm(bdNoEnfermos$trestbps~bdNoEnfermos$chol, data = bdNoEnfermos)
+
+#   para hombres
+bdHombres <- subset(bd,bd$sex==1)
+fit21 <- lm(bdHombres$trestbps~bdHombres$chol)
+summary(fit21)
+#   para mujeres
+bdMujeres <- subset(bd,bd$sex==0)
+fit22 <- lm(bdMujeres$trestbps~bdMujeres$chol)
+summary(fit22)
+
+
+#   a los que tuvieron angina inducida por ejercicio
+bdIndAngina <- subset(bd, bd$exang == 1)
+fit31 <- lm(bdIndAngina$trestbps~bdIndAngina$chol)
+summary(fit31)
+
+#los que no tuvieron angina
+bdNoAngina <- subset(bd, bd$exang == 0)
+fit32 <- lm(bdNoAngina$trestbps~bdNoAngina$chol)
+summary(fit32)
+
+
+#   Con  azucar alto :fbs: (nivel de azucar > 120mg/dl)
+bdAzucarAlto <- subset(bd,bd$fbs == 1)
+fit41 <- lm(bdAzucarAlto$trestbps~bdAzucarAlto$chol)
+summary(fit41)
+
+# Con  azucar bajo:fbs: (nivel de azucar > 120mg/dl)
+bdAzucarBajo <- subset(bd,bd$fbs == 0)
+fit42 <- lm(bdAzucarBajo$trestbps~bdAzucarBajo$chol)
+summary(fit41)
 
 # (2) frecuencia cardiaca en funcion de la presion arterial (sobra  ?)
-# (3) frecuencia cardiaca en funcion del colesterol)
-# (4) depresion ST respecto a la presion arterial
-# (5) depresion ST respecto al colesterol               (oldpeak)
+# ENFERMOS
+fit51 <- lm(bdEnfermos$trestbps~bdEnfermos$thalach)
+summary(fit51)
 
+# SANOS
+fit52 <- lm(bdNoEnfermos$trestbps~bdNoEnfermos$thalach)
+summary(fit52)
+
+# (3) frecuencia cardiaca en funcion del colesterol
+# ENFERMOS
+fit61 <- lm(bdEnfermos$chol~bdEnfermos$thalach)
+summary(fit61)
+# SANOS
+fit62 <- lm(bdNoEnfermos$chol~bdNoEnfermos$thalach)
+summary(fit62)
+
+# (4) depresion ST respecto a la presion arterial
+# ENFERMOS
+fit71 <- lm(bdEnfermos$trestbps~bdEnfermos$oldpeak)
+summary(fit71)
+#SANOS
+fit72 <- lm(bdNoEnfermos$trestbps~bdNoEnfermos$oldpeak)
+summary(fit72)
+
+# (5) depresion ST respecto al colesterol               (oldpeak)
+# ENFERMOS
+fit81 <- lm(bdEnfermos$chol~bdEnfermos$oldpeak)
+summary(fit81)
+
+# SANOS
+fit82 <- lm(bdNoEnfermos$chol~bdNoEnfermos$oldpeak)
+summary(fit82)
+
+# (6) presion arterial respecto al colesterol
+# ENFERMOS:
+fit91 <- lm(bdEnfermos$chol~bdEnfermos$trestbps)
+summary(fit91)
+
+#SANOS
 
 
 # HIPOTESIS RESPECTO A LAS DISTRIBUCIONES
