@@ -8,11 +8,24 @@
 #               header= TRUE,sep = "," , quote = "\"", dec = "." , fill = TRUE)
 
 #Leer archivo pc Ruiz
-#setwd("\\Desktop\\Trabajos-en-R\\Estadistica\\LLANOS_RUIZ_PROYECTO_FINAL\\")
+setwd("Desktop/Trabajos-en-R/Estadistica/LLANOS_RUIZ_PROYECTO_FINAL")
 bd <- read.csv("heart.csv",header= TRUE, sep = ",")
 # Ver la tabla 
 View(bd)
 attach(bd)
+
+bd <- subset(bd,bd$chol < 450)
+# plots enfermos
+bdEnfermos <- subset(bd,bd$target == 1)
+View(bdEnfermos)
+pairs(bdEnfermos)
+
+#plots no enfermos0
+bdNoEnfermos <- subset(bd,bd$target == 0) 
+View(bdNoEnfermos)
+pairs(bdNoEnfermos)
+
+
 names(bd)[names(bd) == "ï..age"] <- "age"
 names(bdEnfermos)[names(bdEnfermos) == "ï..age"] <- "age"
 names(bdNoEnfermos)[names(bdNoEnfermos) == "ï..age"] <- "age"
@@ -26,13 +39,11 @@ apply(bd,2,var)
 
 # Histogramas 
 hist(bd$age,main = "Edad",xlab = "Edad",ylab = "Frecuencia") # si
-hist(bd$sex , main = "Sexo")  # no se
+hist(bd$sex , main = "Sexo")  # si
 hist(bd$cp,main = "Dolor de pecho") # quizas 
 hist(bd$trestbps, xlab = "Presion reposo",ylab = "Frecuencia",main = "Presi?n en reposo") # si
 hist(bd$chol,main = "Colesterol") # si
-hist(bd$fbs,main = "FBS")  # no creo
 hist(bd$thalach,main = "Maxima frecuencia cardiaca",xlab = "Max frecuancia cardiaca",ylab = "Frecuencia") #si
-hist(bd$target,main = "Enfermos") # quizas
 hist(bd$oldpeak, main = "Depresion ST descanso") # quizas
 hist(bd$thal,main = "Tipo de defecto") # no se
 hist(bd$ca,main = "ca") # no se
@@ -40,50 +51,16 @@ hist(bd$ca,main = "ca") # no se
 
 # Diagramas de caja 
 boxplot(bd$age,main = "Edad") # si
-boxplot(bd$sex , main = "Sexo")  # no
-boxplot(bd$cp,main = "Dolor de pecho") # si
 boxplot(bd$trestbps, main = "Presion reposo") # si
 boxplot(bd$chol,main = "Colesterol") # si
-boxplot(bd$fbs,main = "FBS")  # NO
 boxplot(bd$thalach,main = "Max frecuencia cardiaca") #si
-boxplot(bd$target,main = "Enfermos") # no
 boxplot(bd$oldpeak, main = "Depresion ST descanso") # quizas
 boxplot(bd$thal,main = "Tipo de defecto") # no se
-
-# LIMPIAR LA BASE DE DATOS
-#sexo
-# sexVector <- vector(mode = "logical", length= length(bd$sex))
-# for (i in c(1:length(sexVector))) {
-#   if(bd$sex[i] == 1){
-#     # hombre
-#     sexVector[i] = 'M'
-#   }else{
-#     sexVector[i] = 'F'
-#   }
-# }
-
-#cp: tipos de dolores de pecho
-# chestPainVector <- vector(mode ="character",length = length(bd$cp))
-# for (i in c(1:length(chestPainVector))) {
-#   chestPainVector[i] = bd$cp[i]
-# }
-# factorChestPainVector <- factor(chestPainVector)
 
 
 #con str(bd) se mira la estructura de los datos
 # Para datos categoricos con factor
 
-# plots enfermos
-enfermos <- bd$target == 1
-bdEnfermos <- subset(bd,enfermos)
-View(bdEnfermos)
-pairs(bdEnfermos)
-
-#plots no enfermos
-noEnfermos <- bd$target == 0;
-bdNoEnfermos <- subset(bd,noEnfermos) 
-View(bdNoEnfermos)
-pairs(bdNoEnfermos)
 #----------------------------------------------------
 # HISTOGRAMAS ENFERMOS
 
@@ -119,7 +96,7 @@ hist(bdEnfermos$thalach,main = "Max frecuencia cardiaca enfermos", prob = TRUE) 
 # linea de densidad
 #lines(density(bdEnfermos$thalach), col="blue",lwd=2)
 # linea de densidad suavizada
-lines(density(bdEnfermos$thalach, adjust=2),,col = "red")
+lines(density(bdEnfermos$thalach, adjust=2),col = "red")
 
 #Histograma  de depresion ST en descanso de enfermos
 hist(bdEnfermos$oldpeak, main = "Depresion ST descanso enfermos", prob = TRUE) # si - CHI - CUADRADA
@@ -132,14 +109,11 @@ lines(density(bdEnfermos$oldpeak, adjust=2), lty="dotted")
 
 #HISTOGRAMAS NO ENFERMOS
 hist(bdEnfermos$age,main = "Edad  NO enfermos") # si
-hist(bdEnfermos$sex , main = "Sexo  NO enfermos")  # NO
-hist(bdEnfermos$cp,main = "Dolor de pecho NO enfermos") # NO - CATEGORICA 
 hist(bdEnfermos$trestbps, main = "Presion reposo NO enfermos") # si
 hist(bdEnfermos$chol,main = "Colesterol  NO enfermos") # si - CHI - CUADRADA
 hist(bdEnfermos$fbs,main = "Niveles de azucar en la sangre NO enfermos") #booleano  # NO
 hist(bdEnfermos$thalach,main = "Max frecuencia cardiaca NO enfermos") #si
 hist(bdEnfermos$oldpeak, main = "Depresion ST descanso NO enfermos") # si - CHI - CUADRADA
-hist(bdEnfermos$thal,main = "Tipo de defecto NO enfermos") # NO
 
 
 
@@ -175,86 +149,171 @@ hist(bdNoEnfermos$ca)
 # trestbps: presion arterial en reposo
 # thalach: maxima frecuencia cardiaca
 
-#1: colesterol en funcion de presion arterial
-cor(trestbps,chol)
-plot(trestbps,chol,
+# 1: colesterol en funcion de presion arterial
+# Para hombres/Mujeres, angina inducida/no inducida, azucar alto/bajo
+
+#ENFERMOS
+#SANOS
+
+#Enfermos:
+cor(bdEnfermos$trestbps,bdEnfermos$chol)
+plot(bdEnfermos$trestbps,bdEnfermos$chol,
      col = "brown3",
      pch = 20,
-     main = "Colesterol respecto a la presion arterial en reposo",
+     main = "ENFERMOS: Colesterol respecto a la presion arterial en reposo",
      xlab = "Presion arterial en reposo (mm Hg)",
      ylab = "Colesterol mg/dl")         
 
-modelo <- lm(chol~trestbps)
-summary(modelo)
-abline(modelo)
+modelo11 <- lm(bdEnfermos$chol~bdEnfermos$trestbps)
+summary(modelo11)
+# abline(modelo11) : no pone la linea donde es
 
-#2 : presion arterial en reposo en funcion de maxima frecuencia cardiaca
-cor(thalach,trestbps)
-plot(thalach,trestbps,
+# Sanos:
+cor(bdNoEnfermos$trestbps,bdNoEnfermos$chol)
+plot(bdNoEnfermos$trestbps,bdNoEnfermos$chol,
      col = "brown3",
      pch = 20,
-     main = "Presion arterial en reposo respcto a maxima frecuencia cardiaca",
-     xlab = "Maxima frecuencia cardiaca (pul)/min",
-     ylab = "Presion arterial en reposo (mm Hg)"
-     )         
+     main = "NO ENFERMOS: Colesterol respecto a la presion arterial en reposo",
+     xlab = "Presion arterial en reposo (mm Hg)",
+     ylab = "Colesterol mg/dl")         
+modelo12 <- lm(bdNoEnfermos$chol~bdNoEnfermos$trestbps)
+summary(modelo12)
+# abline(modelo12) : no funciona 
 
-modelo1 <- lm(trestbps~thalach)
-summary(modelo1)
-abline(modelo1)
+# Hombres:
+bdHombres <- subset(bd,bd$sex == 1)
+cor(bdHombres$trestbps, bdHombres$chol)
+modelo13 <- lm(bdHombres$chol~bdHombres$trestbps)
+summary(modelo13)
+#Mujeres:
+bdMujeres <- subset(bd,bd$sex == 0)
+cor(bdMujeres$trestbps, bdMujeres$chol)
+modelo14 <- lm(bdMujeres$chol~bdMujeres$trestbps)
+summary(modelo14)
 
-#3 
-cor(?..age,thalach)
-plot(?..age,thalach,
+
+# a las personas con angina inducida por ejercicio
+bdIndAngina <- subset(bd,bd$exang == 1)
+cor(bdIndAngina$trestbps, bdIndAngina$chol)
+modelo15 <- lm(bdIndAngina$chol~bdIndAngina$trestbps)
+summary(modelo15)
+# a las personas SIN angina inducida por ejercicio
+bdNoIndAngina <- subset(bd,bd$exang == 0)
+cor(bdNoIndAngina$trestbps, bdNoIndAngina$chol)
+modelo16 <- lm(bdNoIndAngina$chol~bdNoIndAngina$trestbps)
+summary(modelo16)
+
+
+# Con  azucar alto :fbs: (nivel de azucar > 120mg/dl)
+bdAltoAzucar <- subset(bd,bd$fbs == 1)
+cor(bdAltoAzucar$trestbps, bdAltoAzucar$chol)
+modelo17 <- lm(bdAltoAzucar$chol~bdAltoAzucar$trestbps)
+summary(modelo17)
+
+# Con  azucar bajo:fbs: (nivel de azucar < 120mg/dl)
+bdAzucarNormal <- subset(bd,bd$fbs == 0)
+cor(bdAzucarNormal$trestbps, bdAzucarNormal$chol)
+modelo18 <- lm(bdAzucarNormal$chol~bdAzucarNormal$trestbps)
+summary(modelo18)
+
+ 
+#3) Frecuencia cardiaca maxima en funcion de la edad
+# Enfermos
+cor(bdEnfermos$age,bdEnfermos$thalach)
+plot(bdEnfermos$age,bdEnfermos$thalach,
      col = "brown3",
      pch = 20,
-     main = "Diagrama de dispersi?n",
+     main = "ENFERMOS: frecuencia cardiaca máxima respecto a la edad",
      xlab = "Edad",
      ylab = "Frecuencia cardiaca maxima")         
 
-modelo2 <- lm(thalach~bd$age)
-summary(modelo2)
-abline(modelo2)
+modelo31 <- lm(bdEnfermos$thalach~bdEnfermos$age)
+summary(modelo31)
+abline(modelo31)
+
+# Sanos:
+cor(bdNoEnfermos$age,bdNoEnfermos$thalach)
+plot(bdNoEnfermos$age,bdNoEnfermos$thalach,
+     col = "brown3",
+     pch = 20,
+     main = "NO ENFERMOS: frecuencia cardiaca máxima respecto a la edad",
+     xlab = "Edad",
+     ylab = "Frecuencia cardiaca maxima")         
+
+modelo32 <- lm(bdEnfermos$thalach~bdEnfermos$age)
+summary(modelo32)
+abline(modelo31)
+
+# (2) frecuencia cardiaca en funcion de la presion arterial
+# ENFERMOS
+cor(bdEnfermos$thalach,bdEnfermos$trestbps)
+plot(bdEnfermos$trestbps,bdEnfermos$thalach,
+     col = "brown3",
+     pch = 20,
+     main = "ENFERMOS: frecuencia cardiaca en funcion de la presion arterial",
+     xlab = "Presion Arterial",
+     ylab = "Frecuencia cardiaca maxima")         
+
+fit51 <- lm(bdEnfermos$trestbps~bdEnfermos$thalach)
+summary(fit51)
+abline(fit51)
+
+# SANOS
+cor(bdNoEnfermos$thalach,bdNoEnfermos$trestbps)
+fit52 <- lm(bdNoEnfermos$trestbps~bdNoEnfermos$thalach)
+summary(fit52)
+
+# (3) frecuencia cardiaca en funcion del colesterol
+# ENFERMOS
+cor(bdEnfermos$chol, bdEnfermos$thalach)
+fit61 <- lm(bdEnfermos$chol~bdEnfermos$thalach)
+summary(fit61)
+# SANOS
+cor(bdNoEnfermos$chol, bdNoEnfermos$thalach)
+fit62 <- lm(bdNoEnfermos$chol~bdNoEnfermos$thalach)
+summary(fit62)
+
+# (4) depresion ST respecto a la presion arterial
+# ENFERMOS
+cor(bdEnfermos$oldpeak, bdEnfermos$trestbps)
+fit71 <- lm(bdEnfermos$trestbps~bdEnfermos$oldpeak)
+plot(bdEnfermos$trestbps, bdEnfermos$oldpeak)
+summary(fit71)
+#SANOS
+fit72 <- lm(bdNoEnfermos$trestbps~bdNoEnfermos$oldpeak)
+summary(fit72)
+plot(bdNoEnfermos$trestbps, bdNoEnfermos$oldpeak)
+# (5) depresion ST respecto al  colesterol              (oldpeak)
+# ENFERMOS
+fit81 <- lm(bdEnfermos$oldpeak~bdEnfermos$chol)
+summary(fit81)
+plot(bdEnfermos$oldpeak, bdEnfermos$chol)
+# SANOS
+fit82 <- lm(bdNoEnfermos$oldpeak~bdNoEnfermos$chol)
+summary(fit82)
+plot(bdNoEnfermos$oldpeak, bdNoEnfermos$chol) # ESTEEE
+# (6) presion arterial respecto al colesterol
+# ENFERMOS:
+fit91 <- lm(bdEnfermos$chol~bdEnfermos$trestbps)
+summary(fit91)
+
+#SANOS
+fit92 <- lm(bdNoEnfermos$chol~bdNoEnfermos$trestbps)
+summary(fit92)
 
 
-cor(restecg,thalach)
-cor(exang,thalach)
-cor(thal,thalach)
-cor(thal,chol)
-cor(thalach,age)
-cor(age,cp)
-cor(thalach,chol)
 
-pairs(bd)
-
-sum(target)
-
-enfermos <- subset(bd,target == 1)
-View(enfermos)
-summary(enfermos)
-
-noenfermos <- subset(bd,target == 0)
-View(noenfermos)
-summary(noenfermos)
+cor(bdEnfermos$thalach,bdEnfermos$chol) # interesante
+cor(bdNoEnfermos$thalach,bdNoEnfermos$chol) # interesante
 
 
-apply(enfermos,2,sd)
 
-apply(enfermos,2,var)
 
-apply(noenfermos,2,sd)
-apply(noenfermos,2,var)
-
-hist(enfermos$cp,main = "Dolor de pecho")
-hist(noenfermos$cp,main = "Dolor de pecho")
-
-plot(enfermos$thalach,enfermos$chol,
+plot(bdEnfermos$thalach,bdEnfermos$chol,
      col = "brown3",
      pch = 20,
      main = "Diagrama de dispersion")  
-modelo <- l
 
-pairs(enfermos, pch = 18)
-pairs(noenfermos, pch = 18)
 
 ########################################################################################
 
@@ -320,93 +379,13 @@ t.test(enf_chol - nenf_chol,alternative="two.sided",conf.level=0.95)
 #0: angina tipica
 #1: angina atipica
 #2: dolor no anginal
-#3: asintomÃ¡tico
+#3: asintomatico
 
 # oldpeak: ST depresion induced by exercise relative to rest
 
 
-# (1) colesterol en funcion de presion arterial
-#   En general para enfermos y sanos
-
-#ENFERMOS
-fit11 <- lm(bdEnfermos$trestbps~bdEnfermos$chol, data = bdEnfermos)
-plot(bd$trestbps,bd$chol)
-#abline(fit11)
-summary(fit11)
-#SANOS
-fit12 <- lm(bdNoEnfermos$trestbps~bdNoEnfermos$chol, data = bdNoEnfermos)
-
-#   para hombres
-bdHombres <- subset(bd,bd$sex==1)
-fit21 <- lm(bdHombres$trestbps~bdHombres$chol)
-summary(fit21)
-#   para mujeres
-bdMujeres <- subset(bd,bd$sex==0)
-fit22 <- lm(bdMujeres$trestbps~bdMujeres$chol)
-summary(fit22)
 
 
-#   a los que tuvieron angina inducida por ejercicio
-bdIndAngina <- subset(bd, bd$exang == 1)
-fit31 <- lm(bdIndAngina$trestbps~bdIndAngina$chol)
-summary(fit31)
-
-#los que no tuvieron angina
-bdNoAngina <- subset(bd, bd$exang == 0)
-fit32 <- lm(bdNoAngina$trestbps~bdNoAngina$chol)
-summary(fit32)
-
-
-#   Con  azucar alto :fbs: (nivel de azucar > 120mg/dl)
-bdAzucarAlto <- subset(bd,bd$fbs == 1)
-fit41 <- lm(bdAzucarAlto$trestbps~bdAzucarAlto$chol)
-summary(fit41)
-
-# Con  azucar bajo:fbs: (nivel de azucar > 120mg/dl)
-bdAzucarBajo <- subset(bd,bd$fbs == 0)
-fit42 <- lm(bdAzucarBajo$trestbps~bdAzucarBajo$chol)
-summary(fit41)
-
-# (2) frecuencia cardiaca en funcion de la presion arterial (sobra  ?)
-# ENFERMOS
-fit51 <- lm(bdEnfermos$trestbps~bdEnfermos$thalach)
-summary(fit51)
-
-# SANOS
-fit52 <- lm(bdNoEnfermos$trestbps~bdNoEnfermos$thalach)
-summary(fit52)
-
-# (3) frecuencia cardiaca en funcion del colesterol
-# ENFERMOS
-fit61 <- lm(bdEnfermos$chol~bdEnfermos$thalach)
-summary(fit61)
-# SANOS
-fit62 <- lm(bdNoEnfermos$chol~bdNoEnfermos$thalach)
-summary(fit62)
-
-# (4) depresion ST respecto a la presion arterial
-# ENFERMOS
-fit71 <- lm(bdEnfermos$trestbps~bdEnfermos$oldpeak)
-summary(fit71)
-#SANOS
-fit72 <- lm(bdNoEnfermos$trestbps~bdNoEnfermos$oldpeak)
-summary(fit72)
-
-# (5) depresion ST respecto al colesterol               (oldpeak)
-# ENFERMOS
-fit81 <- lm(bdEnfermos$chol~bdEnfermos$oldpeak)
-summary(fit81)
-
-# SANOS
-fit82 <- lm(bdNoEnfermos$chol~bdNoEnfermos$oldpeak)
-summary(fit82)
-
-# (6) presion arterial respecto al colesterol
-# ENFERMOS:
-fit91 <- lm(bdEnfermos$chol~bdEnfermos$trestbps)
-summary(fit91)
-
-#SANOS
 
 
 # HIPOTESIS RESPECTO A LAS DISTRIBUCIONES
