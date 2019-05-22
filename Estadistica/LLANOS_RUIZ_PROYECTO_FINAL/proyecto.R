@@ -151,6 +151,13 @@ hist(bdNoEnfermos$ca)
 
 # 1: colesterol en funcion de presion arterial
 # Para hombres/Mujeres, angina inducida/no inducida, azucar alto/bajo
+plot(bd$age,bd$thalach,
+     col = "brown3",
+     pch = 20,
+     xlab = "Edad",
+     ylab = "Frecuencia cardiaca máxima (pul/min)")
+modeloFE <- lm(bd$thalach~bd$age)
+abline(modeloFE)
 
 #ENFERMOS
 #SANOS
@@ -166,7 +173,7 @@ plot(bdEnfermos$trestbps,bdEnfermos$chol,
 
 modelo11 <- lm(bdEnfermos$chol~bdEnfermos$trestbps)
 summary(modelo11)
-# abline(modelo11) : no pone la linea donde es
+abline(modelo11)
 
 # Sanos:
 cor(bdNoEnfermos$trestbps,bdNoEnfermos$chol)
@@ -178,43 +185,87 @@ plot(bdNoEnfermos$trestbps,bdNoEnfermos$chol,
      ylab = "Colesterol mg/dl")         
 modelo12 <- lm(bdNoEnfermos$chol~bdNoEnfermos$trestbps)
 summary(modelo12)
-# abline(modelo12) : no funciona 
+abline(modelo12)
 
 # Hombres:
 bdHombres <- subset(bd,bd$sex == 1)
 cor(bdHombres$trestbps, bdHombres$chol)
-modelo13 <- lm(bdHombres$chol~bdHombres$trestbps)
-summary(modelo13)
+plot(bdHombres$trestbps,bdHombres$chol,
+     col = "brown3",
+     pch = 20,
+     main = "Hombres: Colesterol respecto a la presion arterial en reposo",
+     xlab = "Presion arterial en reposo (mm Hg)",
+     ylab = "Colesterol mg/dl")         
+mh <- lm(bdHombres$chol~bdHombres$trestbps)
+summary(mh)
+abline(mh)
 #Mujeres:
 bdMujeres <- subset(bd,bd$sex == 0)
 cor(bdMujeres$trestbps, bdMujeres$chol)
+plot(bdMujeres$trestbps,bdMujeres$chol,
+     col = "brown3",
+     pch = 20,
+     main = "Mujeres: Colesterol respecto a la presion arterial en reposo",
+     xlab = "Presion arterial en reposo (mm Hg)",
+     ylab = "Colesterol mg/dl")         
+
 modelo14 <- lm(bdMujeres$chol~bdMujeres$trestbps)
 summary(modelo14)
-
+abline(modelo14)
 
 # a las personas con angina inducida por ejercicio
 bdIndAngina <- subset(bd,bd$exang == 1)
 cor(bdIndAngina$trestbps, bdIndAngina$chol)
+plot(bdIndAngina$trestbps,bdIndAngina$chol,
+     col = "brown3",
+     pch = 20,
+     main = "Colesterol respecto a la presion arterial en reposo (con angina inducida por ejercicio)",
+     xlab = "Presion arterial en reposo (mm Hg)",
+     ylab = "Colesterol mg/dl")         
 modelo15 <- lm(bdIndAngina$chol~bdIndAngina$trestbps)
 summary(modelo15)
+abline(modelo15)
+
 # a las personas SIN angina inducida por ejercicio
 bdNoIndAngina <- subset(bd,bd$exang == 0)
 cor(bdNoIndAngina$trestbps, bdNoIndAngina$chol)
+plot(bdNoIndAngina$trestbps,bdNoIndAngina$chol,
+     col = "brown3",
+     pch = 20,
+     main = "Colesterol respecto a la presion arterial en reposo (sinangina inducida por ejercicio)",
+     xlab = "Presion arterial en reposo (mm Hg)",
+     ylab = "Colesterol mg/dl")
 modelo16 <- lm(bdNoIndAngina$chol~bdNoIndAngina$trestbps)
 summary(modelo16)
-
+abline(modelo16)
 
 # Con  azucar alto :fbs: (nivel de azucar > 120mg/dl)
 bdAltoAzucar <- subset(bd,bd$fbs == 1)
 cor(bdAltoAzucar$trestbps, bdAltoAzucar$chol)
+plot(bdAltoAzucar$trestbps,bdAltoAzucar$chol,
+     col = "brown3",
+     pch = 20,
+     main = "Colesterol respecto a la presion arterial en reposo (con nivel de azucar > 120mg/dl)",
+     xlab = "Presion arterial en reposo (mm Hg)",
+     ylab = "Colesterol mg/dl")
+
 modelo17 <- lm(bdAltoAzucar$chol~bdAltoAzucar$trestbps)
 summary(modelo17)
+abline(modelo17)
 
 # Con  azucar bajo:fbs: (nivel de azucar < 120mg/dl)
 bdAzucarNormal <- subset(bd,bd$fbs == 0)
 cor(bdAzucarNormal$trestbps, bdAzucarNormal$chol)
+plot(bdAzucarNormal$trestbps,bdAzucarNormal$chol,
+     col = "brown3",
+     pch = 20,
+     main = "Colesterol respecto a la presion arterial en reposo (con nivel de azucar < 120mg/dl)",
+     xlab = "Presion arterial en reposo (mm Hg)",
+     ylab = "Colesterol mg/dl")
+
 modelo18 <- lm(bdAzucarNormal$chol~bdAzucarNormal$trestbps)
 summary(modelo18)
+abline(modelo18)
 
  
 #3) Frecuencia cardiaca maxima en funcion de la edad
@@ -240,12 +291,12 @@ plot(bdNoEnfermos$age,bdNoEnfermos$thalach,
      xlab = "Edad",
      ylab = "Frecuencia cardiaca maxima")         
 
-modelo32 <- lm(bdEnfermos$thalach~bdEnfermos$age)
+modelo32 <- lm(bdNoEnfermos$thalach~bdNoEnfermos$age)
 summary(modelo32)
-abline(modelo31)
+abline(modelo32)
 
 # (2) frecuencia cardiaca en funcion de la presion arterial
-# ENFERMOS
+# ENFERMOS # "NADA DE CORRELACION"
 cor(bdEnfermos$thalach,bdEnfermos$trestbps)
 plot(bdEnfermos$trestbps,bdEnfermos$thalach,
      col = "brown3",
@@ -260,60 +311,112 @@ abline(fit51)
 
 # SANOS
 cor(bdNoEnfermos$thalach,bdNoEnfermos$trestbps)
-fit52 <- lm(bdNoEnfermos$trestbps~bdNoEnfermos$thalach)
-summary(fit52)
+plot(bdNoEnfermos$trestbps,bdNoEnfermos$thalach,
+     col = "brown3",
+     pch = 20,
+     main = "NO ENFERMOS: frecuencia cardiaca en funcion de la presion arterial",
+     xlab = "Presion Arterial",
+     ylab = "Frecuencia cardiaca maxima")         
 
+fit52 <- lm(bdNoEnfermos$thalach~bdNoEnfermos$trestbps)
+summary(fit52)
+abline(fit52)
 # (3) frecuencia cardiaca en funcion del colesterol
-# ENFERMOS
+cor(bd$chol, bd$thalach)
+fit <- lm(bd$chol~bd$thalach)
+plot(bd$chol,bd$thalalch,
+     col = "brown3",
+     pch = 20,
+     xlab = "Colesterol mg/dl",
+     ylab = "Frecuencia cardiaca maxima (pul/min)")
+summary(fit61)
+abline(fit61)
+
+#=================================================
 cor(bdEnfermos$chol, bdEnfermos$thalach)
 fit61 <- lm(bdEnfermos$chol~bdEnfermos$thalach)
+plot(bdEnfermos$chol,bdEnfermos$thalalch,
+     col = "brown3",
+     pch = 20,
+     main = "ENFERMOS: Frecuencia cardiaca en funcion del colesterol",
+     xlab = "Colesterol mg/dl",
+     ylab = "Frecuencia cardiaca maxima (pul/min)")
 summary(fit61)
+abline(fit61)
 # SANOS
 cor(bdNoEnfermos$chol, bdNoEnfermos$thalach)
+plot(bdNoEnfermos$chol,bdEnfermos$thalalch,
+     col = "brown3",
+     pch = 20,
+     main = "NO ENFERMOS: Frecuencia cardiaca en funcion del colesterol",
+     xlab = "Colesterol mg/dl",
+     ylab = "Frecuencia cardiaca maxima (pul/min)")
+
 fit62 <- lm(bdNoEnfermos$chol~bdNoEnfermos$thalach)
 summary(fit62)
-
+abline(fit62)
 # (4) depresion ST respecto a la presion arterial
 # ENFERMOS
 cor(bdEnfermos$oldpeak, bdEnfermos$trestbps)
+plot(bdEnfermos$trestbps,bdEnfermos$oldpeak,
+     col = "brown3",
+     pch = 20,
+     main = "ENFERMOS: Depresion ST respecto a la presión arterial en reposo",
+     xlab = "Presion arterial en reposo (mm Hg)",
+     ylab = "Depresion ST")
 fit71 <- lm(bdEnfermos$trestbps~bdEnfermos$oldpeak)
-plot(bdEnfermos$trestbps, bdEnfermos$oldpeak)
+
 summary(fit71)
+abline(fit71)
 #SANOS
+cor(bdNoEnfermos$oldpeak, bdNoEnfermos$trestbps)
+plot(bdNoEnfermos$trestbps,bdNoEnfermos$oldpeak,
+     col = "brown3",
+     pch = 20,
+     main = "SANOS: Depresion ST respecto a la presión arterial en reposo",
+     xlab = "Presion arterial en reposo (mm Hg)",
+     ylab = "Depresion ST")
 fit72 <- lm(bdNoEnfermos$trestbps~bdNoEnfermos$oldpeak)
 summary(fit72)
-plot(bdNoEnfermos$trestbps, bdNoEnfermos$oldpeak)
+abline(fit72)
 # (5) depresion ST respecto al  colesterol              (oldpeak)
-# ENFERMOS
+# ENFERMOS: a penas se relacionan
+cor(bdEnfermos$oldpeak, bdEnfermos$chol)
+plot(bdEnfermos$chol,bdEnfermos$oldpeak,
+     col = "brown3",
+     pch = 20,
+     main = "Depresion ST respecto al colesterol",
+     xlab = "Colesterol",
+     ylab = "Depresion ST")
 fit81 <- lm(bdEnfermos$oldpeak~bdEnfermos$chol)
 summary(fit81)
-plot(bdEnfermos$oldpeak, bdEnfermos$chol)
+abline(fit81)
 # SANOS
 fit82 <- lm(bdNoEnfermos$oldpeak~bdNoEnfermos$chol)
 summary(fit82)
-plot(bdNoEnfermos$oldpeak, bdNoEnfermos$chol) # ESTEEE
 # (6) presion arterial respecto al colesterol
 # ENFERMOS:
-fit91 <- lm(bdEnfermos$chol~bdEnfermos$trestbps)
-summary(fit91)
-
-#SANOS
-fit92 <- lm(bdNoEnfermos$chol~bdNoEnfermos$trestbps)
-summary(fit92)
-
-
-
-cor(bdEnfermos$thalach,bdEnfermos$chol) # interesante
-cor(bdNoEnfermos$thalach,bdNoEnfermos$chol) # interesante
-
-
-
-
-plot(bdEnfermos$thalach,bdEnfermos$chol,
+cor(bdEnfermos$trestbps, bdEnfermos$chol)
+plot(bdEnfermos$chol,bdEnfermos$trestbps,
      col = "brown3",
      pch = 20,
-     main = "Diagrama de dispersion")  
-
+     main = "ENFERMOS: Presion arterial respecto al colesterol",
+     xlab = "Colesterol",
+     ylab = "Presion arterial")
+fit91 <- lm(bdEnfermos$trestbps~bdEnfermos$chol)
+summary(fit91)
+abline(fit91)
+#SANOS
+cor(bdNoEnfermos$trestbps, bdNoEnfermos$chol)
+plot(bdEnfermos$chol,bdEnfermos$trestbps,
+     col = "brown3",
+     pch = 20,
+     main = "NO ENFERMOS: Presion arterial respecto al colesterol",
+     xlab = "Colesterol",
+     ylab = "Presion arteril")
+fit92 <- lm(bdNoEnfermos$chol~bdNoEnfermos$trestbps)
+summary(fit92)
+abline(fit92)
 
 ########################################################################################
 
