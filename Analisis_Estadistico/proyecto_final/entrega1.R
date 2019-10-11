@@ -84,8 +84,30 @@ df_vdCauca <- subset(data_wifi, data_wifi$DEPARTAMENTO == "VALLE DE CAUCA")
 df_vaupes <- subset(data_wifi, data_wifi$DEPARTAMENTO == "VAUPES")
 df_vichada <- subset(data_wifi, data_wifi$DEPARTAMENTO == "VIVHADA")
 
+#dfs <- c(df_amazonas,df_antioquia, df_arauca, df_atlantico,
+#         df_bogota, df_bolivar,df_boyaca, df_caldas, df_caqueta, df_casanare,df_cauca, df_cesar, df_choco, df_cordoba, df_cundinamarca,
+#         df_guainia, df_guajira, df_guaviare, df_huila, df_magdalena, df_meta, df_narino, df_norSantander, df_putumayo, df_quindio,
+#         df_risaralda, df_SAI, df_santander, df_sucre, df_tolima, df_vaupes, df_vdCauca, df_vichada)
 
+med_amaz <- medias(df_amazonas)
+med_Antioquia <- medias(df_antioquia)
+med_arauca <- medias(df_arauca)
+med_atlantico <- medias(df_atlantico)
+med_Bog <- medias(df_bogota)
+med_bolivar <- medias(df_bolivar)
+med_boyaca <- medias(df_boyaca) #
+med_caldas <- medias(df_caldas)
+med_caq <- medias(df_caqueta)
+med_casanare <- medias(df_casanare)
+med_cauca <- medias(df_cauca)
+med_cesar <- medias(df_cesar)
+med_choco <- medias(df_choco)
+med_cord <- medias(df_cordoba)
+med_cund <- medias(df_cundinamarca) #
 
+med_total <- cbind(med_amaz, med_Antioquia, med_arauca, med_atlantico, med_Bog, med_bolivar, med_caldas, med_caq, med_casanare, med_cauca, med_cesar,
+                   med_choco, med_cord, med_cund)
+med_total <- data.frame(med_total)
 
 # desde columna 8 son subscripciones
 #num de columnas : 21
@@ -100,17 +122,20 @@ medias <- function(df){
 }
 
 
-#med_Bog <- medias(df_bogota)
-#med_Antioquia <- medias(df_antioquia)
-#med_atlantico <- medias(df_atlantico)
-#med_santander <- medias(df_santander)
-#med_narino <- medias(df_narino)
-#trimestre <- 1:14
-#med_total <- cbind(med_Bog,med_Antioquia,med_atlantico,med_santander,med_narino)
-#med_total <- data.frame(med_total)
 
-ggplot(data=med_total, aes(x=trimestre,y=med_total[,1], group=1)) + geom_line()+geom_point()
+trimestre <- 1:14
+
+ggplot(data=med_total, aes(x=trimestre,y=med_total[,1], group=1,)) + geom_line()+geom_point()
 ggplot(data=med_total, aes(x=trimestre,y=med_total[,2], group=1)) + geom_line()+geom_point()
 ggplot(data=med_total, aes(x=trimestre,y=med_total[,3], group=1)) + geom_line()+geom_point()
 ggplot(data=med_total, aes(x=trimestre,y=med_total[,4], group=1)) + geom_line()+geom_point()
 ggplot(data=med_total, aes(x=trimestre,y=med_total[,5], group=1)) + geom_line()+geom_point()
+ggplot(data=med_total, aes(x=trimestre,y=med_total[,6], group=1)) + geom_line()+geom_point()
+ggplot(data=med_total, aes(x=trimestre,y=med_total[,7], group=1)) + geom_line()+geom_point()
+ggplot(data=med_total, aes(x=trimestre,y=med_total[,8], group=1)) + geom_line()+geom_point()
+ggplot(data=med_total, aes(x=trimestre,y=med_total[,9], group=1)) + geom_line()+geom_point()
+ggplot(data=med_total, aes(x=trimestre,y=med_total[,10], group=1)) + geom_line()+geom_point()
+ggplot(data=med_total, aes(x=trimestre,y=med_total[,11], group=1)) + geom_line()+geom_point()
+ggplot(data=med_total, aes(x=trimestre,y=med_total[,12], group=1)) + geom_line()+geom_point()
+ggplot(data=med_total, aes(x=trimestre,y=med_total[,13], group=1)) + geom_line()+geom_point()
+ggplot(data=med_total, aes(x=trimestre,y=med_total[,14], group=1)) + geom_line()+geom_point() # cundinamarca - NaN
