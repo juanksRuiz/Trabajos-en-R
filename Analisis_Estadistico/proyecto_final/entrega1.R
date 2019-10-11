@@ -8,8 +8,17 @@ library("dplyr")
 library("tidyverse")
 library("stringr")
 # Leyendo la base de datos de wifi
-data_wifi <- read.csv(file="C:\\Users\\juank\\Desktop\\Trabajos-en-R\\Analisis_Estadistico\\proyecto_final\\acceso_internet.csv", header=TRUE, sep=",")
+# En windows 10, con computador personal
+#data_wifi <- read.csv(file="C:\\Users\\juank\\Desktop\\Trabajos-en-R\\Analisis_Estadistico\\proyecto_final\\acceso_internet.csv", header=TRUE, sep=",", encoding = "UTF-8")
+
+#en linux, sala lovelace
+data_wifi <- read.csv(file = "/home/lovelace/Desktop/Trabajos-en-R/Analisis_Estadistico/proyecto_final/acceso_internet.csv", header=TRUE, encoding = "UTF-8")
+head(data_wifi)
 View(data_wifi)
+
+for(col in colnames(data_wifi)){
+  Encoding(data_wifi[[col]])
+}
 
 # Limpieza de datos 
 
@@ -33,7 +42,6 @@ data_wifi[,6] <- as.numeric(data_wifi[,6])
 data_wifi[,7] <- as.numeric(data_wifi[,7])
 #===========================================================================
 summary(data_wifi)
-class(mpg)
 
 #Datos subscripciones
 data_subs <- subset(data_wifi[1:3,8:21])
@@ -76,8 +84,7 @@ df_vdCauca <- subset(data_wifi, data_wifi$DEPARTAMENTO == "VALLE DE CAUCA")
 df_vaupes <- subset(data_wifi, data_wifi$DEPARTAMENTO == "VAUPES")
 df_vichada <- subset(data_wifi, data_wifi$DEPARTAMENTO == "VIVHADA")
 
-ggplot(data=data_subs, aes(x = 1:14, y=))
-View(df_amazonas)
+
 
 
 # desde columna 8 son subscripciones
@@ -92,14 +99,15 @@ medias <- function(df){
   
 }
 
-med_Bog <- medias(df_bogota)
-med_Antioquia <- medias(df_antioquia)
-med_atlantico <- medias(df_atlantico)
-med_santander <- medias(df_santander)
-med_narino <- medias(df_narino)
-trimestre <- 1:14
-med_total <- cbind(med_Bog,med_Antioquia,med_atlantico,med_santander,med_narino)
-med_total <- data.frame(med_total)
+
+#med_Bog <- medias(df_bogota)
+#med_Antioquia <- medias(df_antioquia)
+#med_atlantico <- medias(df_atlantico)
+#med_santander <- medias(df_santander)
+#med_narino <- medias(df_narino)
+#trimestre <- 1:14
+#med_total <- cbind(med_Bog,med_Antioquia,med_atlantico,med_santander,med_narino)
+#med_total <- data.frame(med_total)
 
 ggplot(data=med_total, aes(x=trimestre,y=med_total[,1], group=1)) + geom_line()+geom_point()
 ggplot(data=med_total, aes(x=trimestre,y=med_total[,2], group=1)) + geom_line()+geom_point()
