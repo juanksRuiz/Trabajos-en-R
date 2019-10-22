@@ -1,5 +1,17 @@
+#Ejercicio 7.1
+z1 <- c(10,5,7,19,11,8)
+Z <- cbind(rep(1,length(z1)), z1)
+
+Y <- c(15,9,3,25,7,13)
+Bg <- solve(t(Z)%*%Z)%*%t(Z)%*%Y
+
+
+Yg <- Z%*%Bg
+Eps <- Y-Yg
+SSE <- t(Eps)%*%Eps
+
 #Ejercicio 7.2
-Z <- cbind(c(10,5,7,19,11,18),c(2,3,3,6,7,9))
+Z <- cbind(rep(1,6),c(10,5,7,19,11,18),c(2,3,3,6,7,9))
 Y <- c(15,9,3,25,7,13)
 
 Zn1 <- (Z[,1]-mean(Z[,1]))/sqrt(5*sd(Z[,1]))
