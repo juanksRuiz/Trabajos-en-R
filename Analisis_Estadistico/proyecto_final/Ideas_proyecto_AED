@@ -1,0 +1,6 @@
+AGRUPACION DE OBSERVACIONES:
+- por departamento
+- por segmento (Residencial-Estrato x, Corporativo), x = 1,2,3,4,5,6
+- por proveedor (no es seguro)
+
+https://stackoverflow.com/questions/54640332/how-to-select-only-the-rows-that-have-a-certain-value-in-one-column-in-r
