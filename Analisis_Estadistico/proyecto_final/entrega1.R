@@ -2,23 +2,45 @@
 install.packages("ggplot2")
 install.packages("tidyverse")
 install.packages("htmlwidgets")
+install.packages("hash")
 library("htmlwidgets")
 library("ggplot2")
 library("dplyr")
 library("tidyverse")
 library("stringr")
+library("hash")
 # Leyendo la base de datos de wifi
+
 # En windows 10, con computador personal
 #data_wifi <- read.csv(file="C:\\Users\\juank\\Desktop\\Trabajos-en-R\\Analisis_Estadistico\\proyecto_final\\acceso_internet.csv", header=TRUE, sep=",", encoding = "UTF-8")
 
 #en linux, sala lovelace
-data_wifi <- read.csv(file = "/home/lovelace/Desktop/Trabajos-en-R/Analisis_Estadistico/proyecto_final/acceso_internet.csv", header=TRUE, encoding = "UTF-8")
+# data_wifi <- read.csv(file = "/home/lovelace/Desktop/Trabajos-en-R/Analisis_Estadistico/proyecto_final/acceso_internet.csv",
+#header=TRUE,
+#encoding = "UTF-8")
+
+# en sala Hipathia
+data_wifi <- read.csv(file="C:\\Users\\prestamour\\Desktop\\Trabajos-en-R\\Analisis_Estadistico\\proyecto_final\\acceso_internet.csv",
+                      encoding = 'UTF8',header = TRUE,sep = ',')
 head(data_wifi)
 View(data_wifi)
 
-for(col in colnames(data_wifi)){
-  Encoding(data_wifi[[col]])
+
+
+
+# funcion para cambiar las tildes
+# x es el nombre a cambiar
+foo <- function(x){
+  x <- strsplit(x, '')[[1]]
+  y <- ifelse(x == "á", 'a',
+              ifelse(x == "é", 'e',
+                     ifelse(x == "í", 'i',
+                            ifelse(x == "ó", 'o',
+                                   ifelse(x == "ú", 'u', x)))))
+  paste(y, sep = "", collapse = "")
 }
+
+foo("adiós")
 
 # Limpieza de datos 
 
@@ -33,14 +55,38 @@ levels(data_wifi[,2])[8] <- "BOYACA"
 levels(data_wifi[,2])[14] <- "CHOCO"
 levels(data_wifi[,2])[15] <- "CORDOBA"
 levels(data_wifi[,2])[17] <- "GUAINIA"
-levels(data_wifi[,2])[23] <- "NARIÃ‘O"
+levels(data_wifi[,2])[23] <- "NARINO"
 levels(data_wifi[,2])[26] <- "QUINDIO"
 levels(data_wifi[,2])[32] <- "VAUPES"
+
+#====================================================================================
+#data frames por departamento
+dfs_Depto <-  hash()
+for (d in levels(data_wifi[,2])) {
+  dfs_Depto[[d]] <- subset(data_wifi, data_wifi$DEPARTAMENTO == d)
+}
+
+View(dfs_Depto[["AMAZONAS"]])
+length(dfs_Depto)
+
+# data frames por proveedor
+dfs_prov <- hash()
+for(p in levels(data_wifi[,1])){
+  dfs_prov[[p]] <- subset(data_wifi, data_wifi$PROVEEDOR == p)
+}
+
+View(dfs_prov[["AVANTEL S.A.S."]])
+#data frames por segmento
+dfs_seg <- hash()
+for (s in levels(data_wifi[,4])) {
+  dfs_seg[[s]] <- subset(data_wifi, data_wifi$SEGMENTO == s)
+}
+View(dfs_seg[["Corporativo"]])
+#===========================================================================
 
 # columnas 6 y 7: velocidad bajada y subida
 data_wifi[,6] <- as.numeric(data_wifi[,6])
 data_wifi[,7] <- as.numeric(data_wifi[,7])
-#===========================================================================
 summary(data_wifi)
 
 #Datos subscripciones
@@ -49,45 +95,6 @@ data_subs <- subset(data_wifi[1:3,8:21])
 
 #Scatter plots entre periodos (entre aÃ±o y aÃ±o) ???????????
 
-#subscripciones por departamento
-df_amazonas <- subset(data_wifi, data_wifi$DEPARTAMENTO == "AMAZONAS")
-df_antioquia <- subset(data_wifi, data_wifi$DEPARTAMENTO == "ANTIOQUIA")
-df_arauca <- subset(data_wifi, data_wifi$DEPARTAMENTO == "ARAUCA")
-df_SAI <- subset(data_wifi, data_wifi$DEPARTAMENTO == "ARCHIPIELAGO DE SAN ANDRES, PROVIDENCIA Y SANTA CATALINA")
-df_atlantico <- subset(data_wifi, data_wifi$DEPARTAMENTO == "ATLANTICO")
-df_bogota <-subset(data_wifi, data_wifi$DEPARTAMENTO == "BOGOTA D.C.")
-df_bolivar <- subset(data_wifi, data_wifi$DEPARTAMENTO == "BOLIVAR")
-df_boyaca <- subset(data_wifi, data_wifi$DEPARTAMENTO == "BOYACA")
-df_caldas <- subset(data_wifi, data_wifi$DEPARTAMENTO == "CALDAS")
-df_caqueta <- subset(data_wifi, data_wifi$DEPARTAMENTO == "CAQUETA")
-df_casanare <- subset(data_wifi, data_wifi$DEPARTAMENTO == "CASANARE")
-df_cauca <- subset(data_wifi, data_wifi$DEPARTAMENTO == "CAUCA")
-df_cesar <- subset(data_wifi, data_wifi$DEPARTAMENTO == "CESAR")
-df_choco <- subset(data_wifi, data_wifi$DEPARTAMENTO == "CHOCO")
-df_cordoba <- subset(data_wifi, data_wifi$DEPARTAMENTO == "CORDOBA")
-df_cundinamarca <- subset(data_wifi, data_wifi$DEPARTAMENTO == "CUNDINAMARCA")
-df_guainia <- subset(data_wifi, data_wifi$DEPARTAMENTO == "GUIANIA")
-df_guaviare <- subset(data_wifi, data_wifi$DEPARTAMENTO == "GUAVIARE") 
-df_huila <- subset(data_wifi, data_wifi$DEPARTAMENTO == "HUILA")
-df_guajira <- subset(data_wifi, data_wifi$DEPARTAMENTO == "LA GUAJIRA")
-df_magdalena <- subset(data_wifi, data_wifi$DEPARTAMENTO == "MAGDALENA")
-df_meta <- subset(data_wifi, data_wifi$DEPARTAMENTO == "META")
-df_narino <-subset(data_wifi, data_wifi$DEPARTAMENTO == "NARIÃ‘O")
-df_norSantander <- subset(data_wifi, data_wifi$DEPARTAMENTO == "NORTE DE SANTANDER")
-df_putumayo <- subset(data_wifi, data_wifi$DEPARTAMENTO == "PUTUMAYO")
-df_quindio <- subset(data_wifi, data_wifi$DEPARTAMENTO == "QUINDIO")
-df_risaralda <- subset(data_wifi, data_wifi$DEPARTAMENTO == "RISARALDA")
-df_santander <- subset(data_wifi, data_wifi$DEPARTAMENTO == "SANTANDER")
-df_sucre <- subset(data_wifi, data_wifi$DEPARTAMENTO == "SUCRE")
-df_tolima <- subset(data_wifi, data_wifi$DEPARTAMENTO == "TOLIMA")
-df_vdCauca <- subset(data_wifi, data_wifi$DEPARTAMENTO == "VALLE DE CAUCA")
-df_vaupes <- subset(data_wifi, data_wifi$DEPARTAMENTO == "VAUPES")
-df_vichada <- subset(data_wifi, data_wifi$DEPARTAMENTO == "VIVHADA")
-
-#dfs <- c(df_amazonas,df_antioquia, df_arauca, df_atlantico,
-#         df_bogota, df_bolivar,df_boyaca, df_caldas, df_caqueta, df_casanare,df_cauca, df_cesar, df_choco, df_cordoba, df_cundinamarca,
-#         df_guainia, df_guajira, df_guaviare, df_huila, df_magdalena, df_meta, df_narino, df_norSantander, df_putumayo, df_quindio,
-#         df_risaralda, df_SAI, df_santander, df_sucre, df_tolima, df_vaupes, df_vdCauca, df_vichada)
 
 med_amaz <- medias(df_amazonas)
 med_Antioquia <- medias(df_antioquia)
