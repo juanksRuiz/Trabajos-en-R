@@ -67,3 +67,5 @@ a = t(z0)%*%Bg[,1] - t*sqrt(t(z0)%*%solve(t(Z)%*%Z)%*%z0*S2[1,1])
 b = t(z0)%*%Bg[,1] + t*sqrt(t(z0)%*%solve(t(Z)%*%Z)%*%z0*S2[1,1])
 int_EY01 = c(a,b)
 int_EY01
+
+
