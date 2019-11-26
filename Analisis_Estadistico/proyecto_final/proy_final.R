@@ -105,11 +105,30 @@ B <- t(cbind(t(b1t),t(b2t)))
 D11_m12 <- mat_m12(diag(diag(s11)))
 D22_m12 <- mat_m12(diag(diag(s22)))
 # Con U
+# U relacionado con grupo 1
 R_ux1 <- A%*%s11%*%D11_m12
+rownames(R_ux1) <- c("U1","U2")
+colnames(R_ux1) <- c("matematicas","c_naturales")
+
+# U relacionado con grupo 2
 R_ux2 <- A%*%s12%*%D22_m12
+rownames(R_ux2) <- c("U1","U2")
+colnames(R_ux2) <- c("lectura_critica","sociales_ciudadanas","ingles")
+
 R_ux2
 
 # Con V
+# V relacionado con el grupo 1
 R_vx1 <- B%*%s21%*%D11_m12
+rownames(R_vx1) <- c("V1","V2")
+colnames(R_vx1) <- c("matematicas","c_naturales")
+
+# V relacionado con el grupo 2
 R_vx2 <- B%*%s22%*%D22_m12
-R_vx1
+rownames(R_vx2) <- c("V1","V2")
+colnames(R_vx2) <- c("lectura_critica","sociales_ciudadanas","ingles")
+
+R_vx2
+
+#Hacer 2 tablas: una por cada par, y por tabla:
+# Par i con grupo 1,  par i con grupo 2
