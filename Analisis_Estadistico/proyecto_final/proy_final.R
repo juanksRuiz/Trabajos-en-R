@@ -96,16 +96,20 @@ a2t <- t(e[,2])%*%mat_m12(s11) # *X1 = U2
 b2t <- t(f[,2])%*%mat_m12(s22) # *X2 = V2
 
 # a3 <-  ? 
-b3t <- t(f[,3])%*% mat_m12(s22)# *X2 = V3
+b3t <- t(f[,3])%*% mat_m12(s22)# *X2 = V3 -----> NO SIRVE
 
-B <- t(cbind(t(b1t),t(b2t),t(b3t)))
-# Calculamos las correlaciones entre U o V y X1 o X2
+A <- t(cbind(t(a1t),t(a2t)))
+B <- t(cbind(t(b1t),t(b2t)))
+
+# Calculamos las correlaciones muestrales entre U o V y X1 o X2
 D11_m12 <- mat_m12(diag(diag(s11)))
 D22_m12 <- mat_m12(diag(diag(s22)))
 # Con U
+R_ux1 <- A%*%s11%*%D11_m12
+R_ux2 <- A%*%s12%*%D22_m12
+R_ux2
 
 # Con V
 R_vx1 <- B%*%s21%*%D11_m12
 R_vx2 <- B%*%s22%*%D22_m12
-
 R_vx1
