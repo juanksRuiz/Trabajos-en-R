@@ -3,20 +3,20 @@ install.packages("dplyr")
 library("ggplot2")
 library("dplyr")
 df18_1 <- read.csv(file = "C:\\Users\\juank\\Downloads\\BasesDeDatos_proyecto_AED\\Saber_11__2018_1.csv", encoding="UTF-8",header = TRUE)
-col1 = c(3,17:21,28:35,50,56,60,61,67, 70,73, 76,79)
+col1 = c(3,17:21,28:35,50,56,60,61,67, 70,73, 76,79,82)
 df18_1 <- df18_1[,col1]
-
+colnames(df18_1)
 df18_2 <- read.csv(file = "C:\\Users\\juank\\Downloads\\BasesDeDatos_proyecto_AED\\Saber_11__2018_2.csv", encoding="UTF-8", header = TRUE)
 colnames(df18_2) <- tolower(colnames(df18_2))
-col2 <- c(3,12:16,23:30,45,51,55:56,62, 65, 68, 71,74)
+col2 <- c(3,12:16,23:30,45,51,55:56,62, 65, 68, 71,74,77)
 df18_2 <- df18_2[,col2]
 
 df18 <- rbind(df18_1,df18_2)
 
 
 
-df_puntajes <- df18[,19:23]
-Xpunt <- data.matrix(puntajes)
+df_puntajes <- df18[,19:24]
+Xpunt <- data.matrix(df_puntajes)
 
 # Hay Na en ingles
 na_ingles <- which(is.na(Xpunt[,5]))
@@ -30,6 +30,7 @@ for (i in which(is.na(Xpunt[,5]))) {
   count = count + 1
 }
 
+sum(is.na(Xpunt[,5]))
 
 View(Xpunt)
 #________________________________________________________________________________
@@ -65,6 +66,38 @@ for (z in levels(df18$cole_area_ubicacion)) {
 
 #______________________________________________________________________________________
 # organizacion por regiones
+regiones <- c("Amazonia","Andina","Caribe","Insular","Orinoquia","Pacifico")
+dic_region <- hash()
+
+for (k in keys(dic_dept)) {
+    if ((k == "ANTIOQUIA") || (k == "BOYACA") || (k == "CUNDINAMARCA") || (k == "BOGOTA") || (k == "HUILA") || (k == "NORTE SANTANDER") || (k == "QUINDIO") || (k == "RISARALDA") || (k == "SANTANDER") || (k == "TOLIMA")){
+      dic_region[["Andina"]] = rbind(dic_region[["Andina"]], dic_dept[[k]])
+        #dic_dept[["ANTIOQUIA"]], dic_dept[["BOYACA"]], dic_dept[["CUNDINAMARCA"]],
+        #dic_dept[["BOGOTA"]], dic_dept[["HUILA"]],dic_dept[["NORTE SANTANDER"]],
+        #dic_dept[["QUINDIO"]],dic_dept[["RISARALDA"]], dic_dept[["SANTANDER"]],
+        #dic_dept[["TOLIMA"]])
+      
+    }else if ((k == "ATLANTICO") || (k == "BOLIVAR") || (k == "CESAR") || (k == "CORDOBA") || (k == "LA GUAJIRA") || (k == "MAGDALENA") || (k == "SAN ANDRES")){
+      dic_region[["Caribe"]] = rbind(dic_region[["Caribe"]], dic_dept[[k]])
+        # dic_dept[["ATLANTICO"]], dic_dept[["BOLIVAR"]], dic_dept[["CESAR"]],
+        # dic_dept[["CORDOBA"]], dic_dept[["LA GUAJIRA"]], dic_dept[["MAGDALENA"]],
+        # dic_dept[["SAN ANDRES"]])
+    
+    }else if((k == "CHOCO") || (k == "VALLE") || (k == "CAUCA") || (k == "NARIÑO")){
+      dic_region[["Pacifico"]] = rbind(dic_region[["Pacifico"]], dic_dept[[k]])
+        #dic_dept[["CHOCO"]], dic_dept[["VALLE"]], dic_dept[["CAUCA"]], dic_dept[["NARIÑO"]])
+    
+    }else if ((k == "AMAZONAS") || (k == "CAQUETA") || (k == "GUAINIA") || (k == "GUAVIARE") || (k == "PUTUMAYO") || (k == "VAUPES")){
+      dic_region[["Amazonia"]] = rbind(dic_region[["Amazonia"]], dic_dept[[k]])
+        #dic_dept[["AMAZONAS"]], dic_dept[["CAQUETA"]], dic_dept[["GUAINIA"]],
+        #dic_dept[["GUAVIARE"]], dic_dept[["PUTUMAYO"]], dic_dept[["VAUPES"]] ) 
+    
+    }else if((k == "META") || (k == "VICHADA") || (k == "CASANARE") || (k == "ARAUCA")){
+      dic_region[["Orinoquia"]] = rbind(dic_region[["Orinoquia"]], dic_dept[[k]])
+        # dic_dept[["META"]], dic_dept[["VICHADA"]], dic_dept[["CASANARE"]], dic_dept[["ARAUCA"]])
+    }
+  
+}
 
 
 
@@ -99,23 +132,11 @@ ggplot(puntajes, aes(x=puntajes$punt_ingles)) + geom_histogram(color="black", fi
 X1 <- Xpunt[,c(2,3)]
 X2 <- Xpunt[,c(1,4,5)]
 
-# Hay Na en ingles - REPETIDO ARRIBA
-na_ingles <- which(is.na(Xpunt[,5]))
-XNA <- Xpunt[na_ingles,]
-# encontrando los puntajes de ingles faltantes
-XNA[,5] <- round((13/5)*XNA[,6] - 3*(XNA[,1] + XNA[,2] + XNA[,3] + XNA[,4]))
-
-count = 1
-for (i in which(is.na(Xpunt[,5]))) {
-  Xpunt[i,5] <- XNA[count,5]
-  count = count + 1
-}
 
 X1 <- Xpunt[,c(2,3)]
 X2 <- Xpunt[,c(1,4,5)]
 
 
-sum(is.na(Xpunt[,5]))
 # Verificar si se ajusta al puntaje
 
 # Ahora si los datos están completos
@@ -184,15 +205,16 @@ R_vx2
 #Hacer 2 tablas: una por cada par, y por tabla:
 # Par i con grupo 1,  par i con grupo 2
 cor(Xpunt)
-#==========================================================================
-#==========================================================================
-#==========================================================================
+#========================================================================================
+#========================================================================================
+#========================================================================================
+
 # Regresiones lineales, como responde variable Y con respecto a las otras cuatro variables
-View(Xpunt)
-which(is.na(Xpunt[,5]))
-pairs(Xpunt)
-Xpunt[1:as.integer(nrow(Xpunt)/3),] # reduciendo al primer tercio de datos
-df_Xpunt <- data.frame(Xpunt[,1:5])
+#View(Xpunt)
+#which(is.na(Xpunt[,5]))
+#pairs(Xpunt)
+#Xpunt[1:as.integer(nrow(Xpunt)/3),] # reduciendo al primer tercio de datos
+#df_Xpunt <- data.frame(Xpunt[,1:5])
 
 # Caso 1: Y: lectura critica,
 Ya <- Xpunt[,1]
@@ -242,6 +264,8 @@ Ze <- cbind(rep(1,length(Ye)), Ze)
 Bge <- solve(t(Ze)%*%Ze)%*%t(Ze)%*%Ye
 Yge <- Ze%*%Bge
 Ee <- Ye - Yge
+
+
 
 #========================================================================================
 #========================================================================================
