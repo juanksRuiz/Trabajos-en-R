@@ -3,17 +3,19 @@ install.packages("dplyr")
 library("ggplot2")
 library("dplyr")
 df18_1 <- read.csv(file = "C:\\Users\\juank\\Downloads\\BasesDeDatos_proyecto_AED\\Saber_11__2018_1.csv", encoding="UTF-8",header = TRUE)
+col1 = c(3,17:21,28:35,50,56,60,61,67, 70,73, 76,79)
+df18_1 <- df18_1[,col1]
+
 df18_2 <- read.csv(file = "C:\\Users\\juank\\Downloads\\BasesDeDatos_proyecto_AED\\Saber_11__2018_2.csv", encoding="UTF-8", header = TRUE)
-# 67, 70 73, 76,79
-View(df18_1)
-# 62, 65, 68, 71,74
-View(df18_2)
+colnames(df18_2) <- tolower(colnames(df18_2))
+col2 <- c(3,12:16,23:30,45,51,55:56,62, 65, 68, 71,74)
+df18_2 <- df18_2[,col2]
 
-puntaje18_1 <- df18_1[,c(67,70,73,76,79,82)]
-puntaje18_2 <- df18_2[,c(62,65,68,71,74,77)]
-colnames(puntaje18_2) <- colnames(puntaje18_1)
+df18 <- rbind(df18_1,df18_2)
 
-puntajes <- rbind(puntaje18_1,puntaje18_2)
+
+
+df_puntajes <- df18[,19:23]
 Xpunt <- data.matrix(puntajes)
 
 # Hay Na en ingles
@@ -29,8 +31,43 @@ for (i in which(is.na(Xpunt[,5]))) {
 }
 
 
-
 View(Xpunt)
+#________________________________________________________________________________
+# Separacion de datos por departamento
+install.packages("hash")
+library(hash)
+dic_dept <- hash()
+
+for (dep in levels(df18$cole_depto_ubicacion)) {
+  dic_dept[[dep]] = subset(df18,df18$cole_depto_ubicacion == dep)
+}
+
+# numero de datos por departamento
+for (dep in levels(df18$cole_depto_ubicacion)) {
+  print(dep)
+  print(nrow(dic_dept[[dep]]))
+  print("---------------------------------------")
+}
+
+#______________________________________________________________________________________
+# organizacion por estrato
+dic_estrato <- hash()
+for (e in levels(df18$fami_estratovivienda)) {
+  dic_estrato[[e]] = subset(df18,df18$fami_estratovivienda == e)
+}
+
+#______________________________________________________________________________________
+# organizacion (si es  colegio en  zona rural o urbana)
+dic_zona <- hash()
+for (z in levels(df18$cole_area_ubicacion)) {
+  dic_zona[[z]] = subset(df18,df18$cole_area_ubicacion == z)
+}
+
+#______________________________________________________________________________________
+# organizacion por regiones
+
+
+
 #==============================================================================
 # Análisis descriptivo de los datos
 summary(Xpunt)
@@ -62,7 +99,7 @@ ggplot(puntajes, aes(x=puntajes$punt_ingles)) + geom_histogram(color="black", fi
 X1 <- Xpunt[,c(2,3)]
 X2 <- Xpunt[,c(1,4,5)]
 
-# Hay Na en ingles
+# Hay Na en ingles - REPETIDO ARRIBA
 na_ingles <- which(is.na(Xpunt[,5]))
 XNA <- Xpunt[na_ingles,]
 # encontrando los puntajes de ingles faltantes
@@ -155,7 +192,7 @@ View(Xpunt)
 which(is.na(Xpunt[,5]))
 pairs(Xpunt)
 Xpunt[1:as.integer(nrow(Xpunt)/3),] # reduciendo al primer tercio de datos
-df_Xpunt <- data.frame(Xpunt)
+df_Xpunt <- data.frame(Xpunt[,1:5])
 
 # Caso 1: Y: lectura critica,
 Ya <- Xpunt[,1]
@@ -242,6 +279,34 @@ for (i in 1:5) {
   }
 }
 
+
+
+
 matCor_Yi_Xk <- matrix(matCor_Yi_Xk,nrow = 5, byrow = TRUE)
 colnames(matCor_Yi_Xk) <- colnames(Xcp)
 rownames(matCor_Yi_Xk) <- c("Y1","Y2","Y3","Y4","Y5")
+
+#----------------------------------------------------------------------------------------
+# PCA guiandose de datacamp
+# se hizo PCA con los datos estandarizados
+df_Xpunt.pca <- prcomp(df_Xpunt, center = TRUE, scale. = TRUE)
+summary(df_Xpunt.pca)
+
+# Tenemos 5 componentes principales
+# la 1era componente acumula práctimaente el 80% de la varianza de los datos
+# la 2da componente acumula 7% de la varianza de los datos
+# la 3ra componente acumula 5,7% de la varianza de los datos
+# la 4ta componente acumula 4.1% de la varianza de los datos
+# la 5ta componente acumula 3.2% de la varianza de los datos
+
+str(df_Xpunt.pca)
+df_Xpunt.pca$rotation
+
+# plotting PCA
+install.packages("remotes")
+remotes::install_github("vqv/ggbiplot")
+library(ggbiplot)
+
+grid::current.viewport()
+pca_Plot <- ggbiplot(df_Xpunt.pca)
+pca_Plot
