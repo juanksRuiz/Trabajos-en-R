@@ -16,6 +16,20 @@ colnames(puntaje18_2) <- colnames(puntaje18_1)
 puntajes <- rbind(puntaje18_1,puntaje18_2)
 Xpunt <- data.matrix(puntajes)
 
+# Hay Na en ingles
+na_ingles <- which(is.na(Xpunt[,5]))
+XNA <- Xpunt[na_ingles,]
+# encontrando los puntajes de ingles faltantes
+XNA[,5] <- round((13/5)*XNA[,6] - 3*(XNA[,1] + XNA[,2] + XNA[,3] + XNA[,4]))
+
+count = 1
+for (i in which(is.na(Xpunt[,5]))) {
+  Xpunt[i,5] <- XNA[count,5]
+  count = count + 1
+}
+
+
+
 View(Xpunt)
 #==============================================================================
 # Análisis descriptivo de los datos
@@ -132,3 +146,102 @@ R_vx2
 
 #Hacer 2 tablas: una por cada par, y por tabla:
 # Par i con grupo 1,  par i con grupo 2
+cor(Xpunt)
+#==========================================================================
+#==========================================================================
+#==========================================================================
+# Regresiones lineales, como responde variable Y con respecto a las otras cuatro variables
+View(Xpunt)
+which(is.na(Xpunt[,5]))
+pairs(Xpunt)
+Xpunt[1:as.integer(nrow(Xpunt)/3),] # reduciendo al primer tercio de datos
+df_Xpunt <- data.frame(Xpunt)
+
+# Caso 1: Y: lectura critica,
+Ya <- Xpunt[,1]
+Za <- Xpunt[,2:5]
+Za <- cbind(rep(1,length(Ya)), Za)
+
+Bga <- solve(t(Za)%*%Za)%*%t(Za)%*%Ya
+Yga <- Za%*%Bga
+Ea <- Ya - Yga
+
+
+ggplot(df_Xpunt, aes(x=df_Xpunt$punt_lectura_critica, y=df_Xpunt$punt_matematicas)) + geom_point()
+
+
+# Caso 2: Y: matemáticas
+Yb <- Xpunt[,2]
+Zb <- Xpunt[,c(1,3,4,5)]
+Zb <- cbind(rep(1,length(Yb)), Zb)
+
+Bgb <- solve(t(Zb)%*%Zb)%*%t(Zb)%*%Yb
+Ygb <- Zb%*%Bgb
+Eb <- Yb - Ygb
+
+# Caso 3: c_naturales
+Yc <- Xpunt[,3]
+Zc <- Xpunt[,c(1,2,4,5)]
+Zc <- cbind(rep(1,length(Yc)), Zc)
+
+Bgc <- solve(t(Zc)%*%Zc)%*%t(Zc)%*%Yc
+Ygc <- Zc%*%Bgc
+Ec <- Yc - Ygc
+
+# Caso 4: sociales y ciudadanas
+Yd <- Xpunt[,4]
+Zd <- Xpunt[,c(1,2,3,5)]
+Zd <- cbind(rep(1,length(Yd)), Zd)
+
+Bgd <- solve(t(Zd)%*%Zd)%*%t(Zd)%*%Yd
+Ygd <- Zd%*%Bgd
+Ed <- Yd - Ygd
+
+# Caso 5: ingles
+Ye <- Xpunt[,5]
+Ze <- Xpunt[,c(1,2,3,4)]
+Ze <- cbind(rep(1,length(Ye)), Ze)
+
+Bge <- solve(t(Ze)%*%Ze)%*%t(Ze)%*%Ye
+Yge <- Ze%*%Bge
+Ee <- Ye - Yge
+
+#========================================================================================
+#========================================================================================
+#========================================================================================
+# Análisis de componentes principales
+Xcp <- Xpunt[,1:5]
+sds <- diag(cov(Xcp))
+S <- cov(Xcp)
+lam <- eigen(S)$values
+e <- eigen(S)$vectors
+
+# proporciones de varianza capturada por las componentes principales
+prop <- lam/sum(lam)
+corYi_Xk <- function(i,k){
+  # correlacion entre la i-esima componente principal y la k-esima variable
+  eik = e[k,i]
+  #print("eik:")
+  #print(e[k,i])
+  
+  li = lam[i]
+  #print("sqrt(li)")
+  #print(sqrt(li))
+  
+  #print("sqrt(Skk)")
+  #print(sqrt(S[k,k]))
+  return((eik*sqrt(li))/sqrt(S[k,k])) 
+}
+
+matCor_Yi_Xk <- c()
+for (i in 1:5) {
+  # i: indices de PC filas
+  for (k in 1:5) {
+    # k: indices de las X COLUMNAS
+    matCor_Yi_Xk <- c(matCor_Yi_Xk, corYi_Xk(i,k))
+  }
+}
+
+matCor_Yi_Xk <- matrix(matCor_Yi_Xk,nrow = 5, byrow = TRUE)
+colnames(matCor_Yi_Xk) <- colnames(Xcp)
+rownames(matCor_Yi_Xk) <- c("Y1","Y2","Y3","Y4","Y5")
