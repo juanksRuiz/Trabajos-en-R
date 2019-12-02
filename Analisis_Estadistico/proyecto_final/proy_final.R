@@ -13,26 +13,30 @@ df18_2 <- df18_2[,col2]
 
 df18 <- rbind(df18_1,df18_2)
 
-
-
-df_puntajes <- df18[,19:24]
-Xpunt <- data.matrix(df_puntajes)
-
-# Hay Na en ingles
-na_ingles <- which(is.na(Xpunt[,5]))
-XNA <- Xpunt[na_ingles,]
-# encontrando los puntajes de ingles faltantes
-XNA[,5] <- round((13/5)*XNA[,6] - 3*(XNA[,1] + XNA[,2] + XNA[,3] + XNA[,4]))
-
-count = 1
-for (i in which(is.na(Xpunt[,5]))) {
-  Xpunt[i,5] <- XNA[count,5]
-  count = count + 1
+arreglarNAIngles <- function(df){
+  print("elementos NA en la columna de ingles:")
+  print(sum(is.na(df[,23])))
+  # indices de los registros que son NA en ingles
+  na_ingles <- which(is.na(df[,23]))
+  # obtengamos los puntajes en las otras competencias de los registros con NA en ingles
+  dfNA <- df[na_ingles,]
+  # encontrando los puntajes de ingles faltantes
+  dfNA[,23] <- round((13/5)*dfNA[,24] - 3*(dfNA[,19] + dfNA[,20] + dfNA[,21] + dfNA[,22]))
+  
+  count = 1
+  for (i in which(is.na(df_puntajes[,5]))) {
+    df[i,23] <- dfNA[count,23]
+    count = count + 1
+  }
+  print("elementos NA despues:")
+  print(sum(is.na(df[,23])))
+  return(df)
 }
+#=================================
 
-sum(is.na(Xpunt[,5]))
+df18 <- arreglarNAIngles(df18)
 
-View(Xpunt)
+
 #________________________________________________________________________________
 # Separacion de datos por departamento
 install.packages("hash")
@@ -98,6 +102,7 @@ for (k in keys(dic_dept)) {
     }
   
 }
+
 
 
 
@@ -264,6 +269,31 @@ Ze <- cbind(rep(1,length(Ye)), Ze)
 Bge <- solve(t(Ze)%*%Ze)%*%t(Ze)%*%Ye
 Yge <- Ze%*%Bge
 Ee <- Ye - Yge
+# _______________________________________________________________________________________
+# Para cada region
+# puntajes en las competencias son de columna 19 a 23
+getPuntajes <- function(df){
+  # funcion que retorna matriz con los 5 componentes evaluados
+  mat = data.matrix(df[,19:23])
+  
+  return(mat)
+}
+
+arreglarNAIngles(dic_region[["Caribe"]])
+
+
+
+for (k in keys(dic_region)) {
+  print(k)
+  print("Correlacion entre competencias")
+  corr <-cor(dic_region[[k]][,19:23])
+  colnames(corr) <- c("LC","Math","CN","SC","I")
+  rownames(corr) <- c("LC","Math","CN","SC","I")
+  print(corr)
+  print("============================================================")
+  
+}
+
 
 
 
