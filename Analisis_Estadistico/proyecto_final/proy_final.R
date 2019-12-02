@@ -2,11 +2,15 @@ install.packages("ggplot2")
 install.packages("dplyr")
 library("ggplot2")
 library("dplyr")
-df18_1 <- read.csv(file = "C:\\Users\\juank\\Downloads\\BasesDeDatos_proyecto_AED\\Saber_11__2018_1.csv", encoding="UTF-8",header = TRUE)
+#df18_1 <- read.csv(file = "C:\\Users\\juank\\Downloads\\BasesDeDatos_proyecto_AED\\Saber_11__2018_1.csv", encoding="UTF-8",header = TRUE)
+# en Hipathia
+df18_1 <- read.csv(file = "C:\\Users\\prestamour\\Downloads\\BasesDeDatos_proyecto_AED\\BasesDeDatos_proyecto_AED\\Saber_11__2018_1.csv", encoding="UTF-8", header=TRUE)
 col1 = c(3,17:21,28:35,50,56,60,61,67, 70,73, 76,79,82,58,59)
 df18_1 <- df18_1[,col1]
 colnames(df18_1)
-df18_2 <- read.csv(file = "C:\\Users\\juank\\Downloads\\BasesDeDatos_proyecto_AED\\Saber_11__2018_2.csv", encoding="UTF-8", header = TRUE)
+#df18_2 <- read.csv(file = "C:\\Users\\juank\\Downloads\\BasesDeDatos_proyecto_AED\\Saber_11__2018_2.csv", encoding="UTF-8", header = TRUE)
+# en Hipathia
+df18_2 <- read.csv(file = "C:\\Users\\prestamour\\Downloads\\BasesDeDatos_proyecto_AED\\BasesDeDatos_proyecto_AED\\Saber_11__2018_2.csv", encoding="UTF-8", header=TRUE)
 colnames(df18_2) <- tolower(colnames(df18_2))
 col2 <- c(3,12:16,23:30,45,51,55:56,62, 65, 68, 71,74,77,53,54)
 df18_2 <- df18_2[,col2]
@@ -108,7 +112,7 @@ for (k in (keys(dic_dept))) {
               || (k == "SAN ANDRES")){
       dic_region[["Caribe"]] = rbind(dic_region[["Caribe"]], dic_dept[[k]])
         
-    }else if((k == "CHOCO") || (k == "VALLE") || (k == "CAUCA") || (k == "NARIÃ‘O")){
+    }else if((k == "CHOCO") || (k == "VALLE") || (k == "CAUCA") || (k == "NARIÃÑO")){
       dic_region[["Pacifico"]] = rbind(dic_region[["Pacifico"]], dic_dept[[k]])
         
     }else if ((k == "AMAZONAS") || (k == "CAQUETA") || (k == "GUAINIA") 
@@ -131,22 +135,25 @@ for (k in (keys(dic_dept))) {
 # Histogramas de cada una de las competencias evaluadas y del puntaje total
 
 # para el global
-ggplot(df18, aes(x=df18$punt_global)) + geom_histogram(color="black", fill="gray",binwidth = 5)
+ggplot(df18, aes(x=df18$punt_global)) + geom_histogram(color="black", fill="gray",binwidth = 5) + ggtitle("Histograma del puntaje global")
 
 # para lectura critica
-ggplot(df18, aes(x=df18$punt_lectura_critica)) + geom_histogram(color="black", fill="coral3",binwidth = 2)
+ggplot(df18, aes(x=df18$punt_lectura_critica)) + geom_histogram(color="black", fill="coral3",binwidth = 2)+ ggtitle("Histograma del puntaje  en lectura crítica")
 
 # para matemÃ¡ticas
-ggplot(df18, aes(x=df18$punt_matematicas)) + geom_histogram(color="black", fill="chartreuse4",binwidth = 2)
+ggplot(df18, aes(x=df18$punt_matematicas)) + geom_histogram(color="black", fill="chartreuse4",binwidth = 2) + ggtitle("Histograma del puntaje en Matemáticas")
 
 # para ciencias naturales
-ggplot(df18, aes(x=df18$punt_c_naturales)) + geom_histogram(color="black", fill="dodgerblue3",binwidth = 2)
+ggplot(df18, aes(x=df18$punt_c_naturales)) + geom_histogram(color="black", fill="dodgerblue3",binwidth = 2)+ ggtitle("Histograma del puntaje  en Ciencias Naturales")
 
 # para sociales y ciudadanas
-ggplot(df18, aes(x=df18$punt_sociales_ciudadanas)) + geom_histogram(color="black", fill="darkorchid4", binwidth = 3)
+ggplot(df18, aes(x=df18$punt_sociales_ciudadanas)) + geom_histogram(color="black", fill="darkorchid4", binwidth = 1) + ggtitle("Histograma del puntaje en Sociales y Ciudadanas")
 
 #para ingles
-ggplot(df18, aes(x=df18$punt_ingles)) + geom_histogram(color="black", fill="gold", binwidth = 2)
+ggplot(df18, aes(x=df18$punt_ingles)) + geom_histogram(color="black", fill="gold", binwidth = 2) + ggtitle("Histograma del puntaje en Ingles")
+
+
+# Sociales y ciudadanas e Ingles no parecen tener distribucion ormal
 
 #==============================================================================
 # 3) Relacion entre competencias evaluadas: anÃ¡lisis canÃ³nico de correlaciones
@@ -362,23 +369,131 @@ autoplot(pca_Pacifico, data = dic_region[["Pacifico"]],
 #===========================================================================
 #===========================================================================
 # comparacion de medias (ANOVA Y MANOVA)
+
+#primero verificamos la distribucion de los datos de ingles y sociales y ciudadanas
+require(graphics)
+install.packages("fitdistrplus")
+library(fitdistrplus)
+
+# Sólo para la región Andina que cubre la mayoría de la población
+# el fit no cuadra para inglés
+fit.normAndina <- fitdist(dic_region[["Andina"]]$punt_ingles, distr = "norm", method = "mle")
+plot(fit.normAndina)
+
+# el fit no cuadra para sociales y ciuadanas
+fit.normAndinaSC <- fitdist(dic_region[["Andina"]]$punt_sociales_ciudadanas, distr = "norm", method = "mle")
+plot(fit.normAndinaSC)
+
+# las distribuciones no se ajustan luego no siguen una distribución normal
+
+
+#__________________________________
 # Manova test
 # entre departamentos
+# Sólo nos quedamos con Lectura crítica, Ciencias Naturales y Matemáticas
+
+# H0: todos los efectos de tratamiento (tao_1, ... ,tao_g) son iguales a 0 Para las 3 variables/competencias
+# Las variables independientes son las competencias evaluadas, la dependiente es el departmento donde se ubica el colegio
+
 pLC <- df18$punt_lectura_critica
 pM <- df18$punt_matematicas
 pCN <- df18$punt_c_naturales
-pSC <- df18$punt_sociales_ciudadanas
-pI <- df18$punt_ingles
-res_manova <- manova(cbind(pLC,pM,pCN,pSC,pI) ~ cole_depto_ubicacion, data = df18)
-summary(res_manova)
+res_manova <- manova(cbind(pLC,pM,pCN) ~ cole_depto_ubicacion, data = df18)
 
-summary.aov(res_manova)
+summary(res_manova,test = "Wilks")
+#summary.aov(res_manova)
 
-#primero veamos la distribucion de los datos de inglÃ©s
-require(graphics)
-library(fitdistrplus)
+Wilks <- 0.91739
+n <- nrow(df18)
+# p: número de variables
+p <- 3
+g <- 33 # numero de pobalciones/grupos
+
+izq <- -(n-1-(p+g)/2)*log(Wilks)
+alfa <- 0.05
+qc <- qchisq(alfa,df = p*(g-1), lower.tail = FALSE)
+
+izq >qc # TRUE
+# por lo tanto los efectos de tratamiento son distintos de 0 es decir si hay una variabilidad de las medias 
+# entre cada uno de los departamentows para las 3 competencias evaluadas
+
+# Hagamos la misma prueba para cada region del pais
+
+isTratamientosIguala_0 <- function(w,n,p,g,a){
+  iz <- -(n-1-(p+g)/2)*log(w)
+  print("iz = ")
+  print(iz)
+  q <- qchisq(a,df = p*(g-1), lower.tail = FALSE)
+  print("qchisq = ")
+  print(q)
+  return(iz > q)
+}
+
+# Para la region Andina
+
+pLC <- dic_region[["Andina"]]$punt_lectura_critica
+pM <- dic_region[["Andina"]]$punt_matematicas
+pCN <- dic_region[["Andina"]]$punt_c_naturales
+res_manova <- manova(cbind(pLC,pM,pCN) ~ dic_region[["Andina"]]$cole_depto_ubicacion, data = dic_region[["Andina"]])
+summary(res_manova,test = "Wilks")
+
+w1 <- 0.94414
+
+isTratamientosIguala_0(w1, nrow(dic_region[["Andina"]]), 3,10,alfa) # = TRUE
+# los tratamientos son distintos en la region Andina
+
+# Para la region Amazonia
+pLC <- dic_region[["Amazonia"]]$punt_lectura_critica
+pM <- dic_region[["Amazonia"]]$punt_matematicas
+pCN <- dic_region[["Amazonia"]]$punt_c_naturales
+res_manova <- manova(cbind(pLC,pM,pCN) ~ dic_region[["Amazonia"]]$cole_depto_ubicacion, data = dic_region[["Amazonia"]])
+summary(res_manova,test = "Wilks")
+
+w2 <- 0.94942
+
+isTratamientosIguala_0(w2, nrow(dic_region[["Amazonia"]]),3,6,alfa) # TRUE
+# los tratamientos son distintos en la región Amazonia
 
 
-fit.weibull <- fitdist(df18$punt_ingles,distr = "weibull", method = "mle", lower = c(0,0), start = list(scale = 1, shape = 1))
-plot(fit.weibull)
+# Para la region Caribe
+pLC <- dic_region[["Caribe"]]$punt_lectura_critica
+pM <- dic_region[["Caribe"]]$punt_matematicas
+pCN <- dic_region[["Caribe"]]$punt_c_naturales
+res_manova <- manova(cbind(pLC,pM,pCN) ~ dic_region[["Caribe"]]$cole_depto_ubicacion, data = dic_region[["Caribe"]])
+summary(res_manova,test = "Wilks")
+
+w3 <- 0.96368
+
+isTratamientosIguala_0(w3, nrow(dic_region[["Caribe"]]),3,7,alfa) # = TRUE
+# los tratamientos son distintoas ára la región Caribe
+
+
+# pARA LA REGIÓN PACPIFICO
+pLC <- dic_region[["Pacifico"]]$punt_lectura_critica
+pM <- dic_region[["Pacifico"]]$punt_matematicas
+pCN <- dic_region[["Pacifico"]]$punt_c_naturales
+res_manova <- manova(cbind(pLC,pM,pCN) ~ dic_region[["Pacifico"]]$cole_depto_ubicacion, data = dic_region[["Pacifico"]])
+summary(res_manova,test = "Wilks")
+
+w4 <- 0.93114
+
+isTratamientosIguala_0(w4, nrow(dic_region[["Pacifico"]]), 3, 4, alfa) # TRUE
+# los tratamientos son distintos para la region Pacifico
+
+# Para la region Orinoquia
+pLC <- dic_region[["Orinoquia"]]$punt_lectura_critica
+pM <- dic_region[["Orinoquia"]]$punt_matematicas
+pCN <- dic_region[["Orinoquia"]]$punt_c_naturales
+res_manova <- manova(cbind(pLC,pM,pCN) ~ dic_region[["Orinoquia"]]$cole_depto_ubicacion, data = dic_region[["Orinoquia"]])
+summary(res_manova,test = "Wilks")
+
+w5 <- 0.98641
+
+isTratamientosIguala_0(w5, nrow(dic_region[["Orinoquia"]]), 3, 4, alfa) # TRUE
+# los tratamientos son distintos de 0 para la regioin Orinoquia
+
+# En consecuencia, independientemente de la region, hay diferencias en los tratamientos es decir que  para
+# las competencias lectura crítica, matemáticas y Ciencias Naturales se comportan distintamente en cada departamento,
+# por sus condiciones económicas, su contexto social 
+
 
