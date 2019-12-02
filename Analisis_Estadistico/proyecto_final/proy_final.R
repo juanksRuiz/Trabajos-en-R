@@ -221,6 +221,42 @@ cor(Xpunt)
 #Xpunt[1:as.integer(nrow(Xpunt)/3),] # reduciendo al primer tercio de datos
 #df_Xpunt <- data.frame(Xpunt[,1:5])
 
+# 1 graficas de regresiones por region: correlacion entre ciencias naturales y matemáticas
+# Amazonia
+linmod1 <- lm(punt_lectura_critica ~ punt_c_naturales, data = dic_region[["Amazonia"]])
+summary(linmod1)
+
+ggplot(dic_region[["Amazonia"]], aes(x=punt_lectura_critica, y=punt_c_naturales)) + geom_point() + geom_abline(intercept = linmod1$coefficients[1], slope = linmod1$coefficients[2],col="red" )+ ggtitle("Relacion entre Lectura crítica y Ciencias naturales en la región Amazonia ")
+
+
+# Andina
+linmod2 <- lm(punt_lectura_critica ~ punt_c_naturales, data = dic_region[["Andina"]])
+summary(linmod2)
+
+ggplot(dic_region[["Andina"]], aes(x=punt_lectura_critica, y=punt_c_naturales)) + geom_point() + geom_abline(intercept = linmod2$coefficients[1],
+                                                                                                             slope = linmod2$coefficients[2],col="red" )+ ggtitle("Relacion entre Lectura crítica y Ciencias naturales en la región Andina")
+
+# Caribe
+linmod3 <- lm(punt_lectura_critica ~ punt_c_naturales, data = dic_region[["Caribe"]])
+summary(linmod3)
+
+ggplot(dic_region[["Caribe"]], aes(x=punt_lectura_critica, y=punt_c_naturales)) + geom_point() + geom_abline(intercept = linmod3$coefficients[1],
+                                                                                                             slope = linmod3$coefficients[2],col="red" )+ ggtitle("Relacion entre Lectura crítica y Ciencias naturales en la región Caribe ")
+
+# Orinoquia
+linmod4 <- lm(punt_lectura_critica ~ punt_c_naturales, data = dic_region[["Orinoquia"]])
+summary(linmod4)
+
+ggplot(dic_region[["Orinoquia"]], aes(x=punt_lectura_critica, y=punt_c_naturales)) + geom_point() + geom_abline(intercept = linmod4$coefficients[1],
+                                                                                                                slope = linmod4$coefficients[2],col="red" )+ ggtitle("Relacion entre Lectura crítica y Ciencias naturales en la región Orinoquia ")
+
+# Pacifico
+linmod5 <- lm(punt_lectura_critica ~ punt_c_naturales, data = dic_region[["Pacifico"]])
+summary(linmod5)
+
+ggplot(dic_region[["Pacifico"]], aes(x=punt_lectura_critica, y=punt_c_naturales)) + geom_point() + geom_abline(intercept = linmod5$coefficients[1],
+                                                                                                               slope = linmod5$coefficients[2],col="red" )+ ggtitle("Relacion entre Lectura crítica y Ciencias naturales en la región Pacífico ")
+
 # Caso 1: Y: lectura critica,
 Ya <- Xpunt[,1]
 Za <- Xpunt[,2:5]
@@ -293,6 +329,8 @@ for (k in keys(dic_region)) {
   print("============================================================")
   
 }
+
+# graficas de puntos y rectas de regresión lineal
 
 
 
