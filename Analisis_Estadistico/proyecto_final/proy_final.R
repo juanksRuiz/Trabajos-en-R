@@ -156,9 +156,6 @@ X1 <- Xpunt[,c(2,3)]
 X2 <- Xpunt[,c(1,4,5)]
 
 
-X1 <- Xpunt[,c(2,3)]
-X2 <- Xpunt[,c(1,4,5)]
-
 
 # Verificar si se ajusta al puntaje
 
@@ -302,51 +299,10 @@ ggplot(dic_region[["Pacifico"]], aes(x=punt_lectura_critica, y=punt_c_naturales)
 #========================================================================================
 # Análisis de componentes principales
 
-
-
-Xcp <- Xpunt[,1:5]
-sds <- diag(cov(Xcp))
-S <- cov(Xcp)
-lam <- eigen(S)$values
-e <- eigen(S)$vectors
-
-# proporciones de varianza capturada por las componentes principales
-prop <- lam/sum(lam)
-corYi_Xk <- function(i,k){
-  # correlacion entre la i-esima componente principal y la (k-esima variable
-  eik = e[k,i]
-  #print("ei(k:")
-  #print(e[(k,i])
-  
-  li = lam[i]
-  #print("sqrt(li)")
-  #print(sqrt(li))
-  
-  #print("sqrt(S(k(k)")
-  #print(sqrt(S[(k,(k]))
-  return((ei(k*sqrt(li))/sqrt(S[(k,(k])) 
-}
-
-matCor_Yi_X(k <- c()
-for (i in 1:5) {
-  # i: indices de PC filas
-  for ((k in 1:5) {
-    # (k: indices de las X COLUMNAS
-    matCor_Yi_X(k <- c(matCor_Yi_X(k, corYi_X(k(i,(k))
-  }
-}
-
-
-
-
-matCor_Yi_X(k <- matrix(matCor_Yi_X(k,nrow = 5, byrow = TRUE)
-colnames(matCor_Yi_X(k) <- colnames(Xcp)
-rownames(matCor_Yi_X(k) <- c("Y1","Y2","Y3","Y4","Y5")
-
 #----------------------------------------------------------------------------------------
 # PCA guiandose de datacamp
 pca_todo <- prcomp(df18[,19:23], center = TRUE, scale. = TRUE)
-summary(pca_todo)
+pca_todo$rotation
 # HACER pca PARA CADA REGIÓN
 # se hace PCA con los datos estandarizados
 pca_Amazonia <- prcomp(dic_region[["Amazonia"]][,19:23], center = TRUE, scale. = TRUE)
@@ -363,12 +319,6 @@ summary(pca_Orinoquia)
 
 pca_Pacifico <- prcomp(dic_region[["Pacifico"]][,19:23], center = TRUE, scale. = TRUE)
 summary(pca_Pacifico)
-# Tenemos 5 componentes principales
-# la 1era componente acumula aproximádamente el 77% de la varianza de los datos
-# la 2da componente acumula 7% de la varianza de los datos
-# la 3ra componente acumula 5,7% de la varianza de los datos
-# la 4ta componente acumula 4.1% de la varianza de los datos
-# la 5ta componente acumula 3.5% de la varianza de los datos
 
 pca_Amazonia$rotation
 pca_Andina$rotation
@@ -412,3 +362,23 @@ autoplot(pca_Pacifico, data = dic_region[["Pacifico"]],
 #===========================================================================
 #===========================================================================
 # comparacion de medias (ANOVA Y MANOVA)
+# Manova test
+# entre departamentos
+pLC <- df18$punt_lectura_critica
+pM <- df18$punt_matematicas
+pCN <- df18$punt_c_naturales
+pSC <- df18$punt_sociales_ciudadanas
+pI <- df18$punt_ingles
+res_manova <- manova(cbind(pLC,pM,pCN,pSC,pI) ~ cole_depto_ubicacion, data = df18)
+summary(res_manova)
+
+summary.aov(res_manova)
+
+#primero veamos la distribucion de los datos de inglés
+require(graphics)
+library(fitdistrplus)
+
+
+fit.weibull <- fitdist(df18$punt_ingles,distr = "weibull", method = "mle", lower = c(0,0), start = list(scale = 1, shape = 1))
+plot(fit.weibull)
+
