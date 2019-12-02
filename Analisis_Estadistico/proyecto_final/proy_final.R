@@ -3,12 +3,12 @@ install.packages("dplyr")
 library("ggplot2")
 library("dplyr")
 df18_1 <- read.csv(file = "C:\\Users\\juank\\Downloads\\BasesDeDatos_proyecto_AED\\Saber_11__2018_1.csv", encoding="UTF-8",header = TRUE)
-col1 = c(3,17:21,28:35,50,56,60,61,67, 70,73, 76,79,82)
+col1 = c(3,17:21,28:35,50,56,60,61,67, 70,73, 76,79,82,58,59)
 df18_1 <- df18_1[,col1]
 colnames(df18_1)
 df18_2 <- read.csv(file = "C:\\Users\\juank\\Downloads\\BasesDeDatos_proyecto_AED\\Saber_11__2018_2.csv", encoding="UTF-8", header = TRUE)
 colnames(df18_2) <- tolower(colnames(df18_2))
-col2 <- c(3,12:16,23:30,45,51,55:56,62, 65, 68, 71,74,77)
+col2 <- c(3,12:16,23:30,45,51,55:56,62, 65, 68, 71,74,77,53,54)
 df18_2 <- df18_2[,col2]
 
 df18 <- rbind(df18_1,df18_2)
@@ -18,13 +18,13 @@ arreglarNAIngles <- function(df){
   print(sum(is.na(df[,23])))
   # indices de los registros que son NA en ingles
   na_ingles <- which(is.na(df[,23]))
-  # obtengamos los puntajes en las otras competencias de los registros con NA en ingles
+  # obtengamos los df18 en las otras competencias de los registros con NA en ingles
   dfNA <- df[na_ingles,]
-  # encontrando los puntajes de ingles faltantes
+  # encontrando los df18 de ingles faltantes
   dfNA[,23] <- round((13/5)*dfNA[,24] - 3*(dfNA[,19] + dfNA[,20] + dfNA[,21] + dfNA[,22]))
   
   count = 1
-  for (i in which(is.na(df_puntajes[,5]))) {
+  for (i in na_ingles) {
     df[i,23] <- dfNA[count,23]
     count = count + 1
   }
@@ -35,6 +35,29 @@ arreglarNAIngles <- function(df){
 #=================================
 
 df18 <- arreglarNAIngles(df18)
+
+
+#=================================
+# pegando la columna de las regiones
+cole_region <- c()
+for (i in 1:nrow(df18)) {
+  if(df18$cole_depto_ubicacion[i] %in% c("ANTIOQUIA","BOYACA","CUNDINAMARCA","HUILA","NORTE SANTANDER","QUINDIO","RISARALDA","SANTANDER","TOLIMA")) {
+    cole_region <- c(cole_region, "Andina")
+    
+  }else if (df18$cole_depto_ubicacion[i] %in% c("ATLANTICO","BOLIVAR","CESAR","CORDOBA","LA GUAJIRA","MAGDALENA","SAN ANDRES")){
+    cole_region <- c(cole_region, "Caribe")
+    
+  }else if(df18$cole_depto_ubicacion[i] %in% c("CHOCO","VALLE","CAUCA","NARIÑO")){
+    cole_region <- c(cole_region, "Pacifico")
+    
+  }else if (df18$cole_depto_ubicacion[i] %in% c("AMAZONAS","CAQUETA","GUAINIA","GUAVIARE","PUTUMAYO","VAUPES")){
+    cole_region <- c(cole_region, "Amazonia")
+    
+  }else if(df18$cole_depto_ubicacion[i] %in% c("META","VICHADA","CASANARE","ARAUCA")){
+    cole_region <- c(cole_region, "Orinoquia")
+  }
+}
+cbind(df18,cole_region)
 
 
 #________________________________________________________________________________
@@ -73,62 +96,57 @@ for (z in levels(df18$cole_area_ubicacion)) {
 regiones <- c("Amazonia","Andina","Caribe","Insular","Orinoquia","Pacifico")
 dic_region <- hash()
 
-for (k in keys(dic_dept)) {
-    if ((k == "ANTIOQUIA") || (k == "BOYACA") || (k == "CUNDINAMARCA") || (k == "BOGOTA") || (k == "HUILA") || (k == "NORTE SANTANDER") || (k == "QUINDIO") || (k == "RISARALDA") || (k == "SANTANDER") || (k == "TOLIMA")){
+for (k in (keys(dic_dept))) {
+    if ((k == "ANTIOQUIA") || (k == "BOYACA") || (k == "CUNDINAMARCA") 
+        || (k == "BOGOTA") || (k == "HUILA") || (k == "NORTE SANTANDER") 
+        || (k == "QUINDIO") || (k == "RISARALDA") || (k == "SANTANDER") 
+        || (k == "TOLIMA")){
       dic_region[["Andina"]] = rbind(dic_region[["Andina"]], dic_dept[[k]])
-        #dic_dept[["ANTIOQUIA"]], dic_dept[["BOYACA"]], dic_dept[["CUNDINAMARCA"]],
-        #dic_dept[["BOGOTA"]], dic_dept[["HUILA"]],dic_dept[["NORTE SANTANDER"]],
-        #dic_dept[["QUINDIO"]],dic_dept[["RISARALDA"]], dic_dept[["SANTANDER"]],
-        #dic_dept[["TOLIMA"]])
-      
-    }else if ((k == "ATLANTICO") || (k == "BOLIVAR") || (k == "CESAR") || (k == "CORDOBA") || (k == "LA GUAJIRA") || (k == "MAGDALENA") || (k == "SAN ANDRES")){
+        
+    }else if ((k == "ATLANTICO") || (k == "BOLIVAR") || (k == "CESAR") 
+              || (k == "CORDOBA") || (k == "LA GUAJIRA") || (k == "MAGDALENA") 
+              || (k == "SAN ANDRES")){
       dic_region[["Caribe"]] = rbind(dic_region[["Caribe"]], dic_dept[[k]])
-        # dic_dept[["ATLANTICO"]], dic_dept[["BOLIVAR"]], dic_dept[["CESAR"]],
-        # dic_dept[["CORDOBA"]], dic_dept[["LA GUAJIRA"]], dic_dept[["MAGDALENA"]],
-        # dic_dept[["SAN ANDRES"]])
-    
+        
     }else if((k == "CHOCO") || (k == "VALLE") || (k == "CAUCA") || (k == "NARIÑO")){
       dic_region[["Pacifico"]] = rbind(dic_region[["Pacifico"]], dic_dept[[k]])
-        #dic_dept[["CHOCO"]], dic_dept[["VALLE"]], dic_dept[["CAUCA"]], dic_dept[["NARIÑO"]])
-    
-    }else if ((k == "AMAZONAS") || (k == "CAQUETA") || (k == "GUAINIA") || (k == "GUAVIARE") || (k == "PUTUMAYO") || (k == "VAUPES")){
+        
+    }else if ((k == "AMAZONAS") || (k == "CAQUETA") || (k == "GUAINIA") 
+              || (k == "GUAVIARE") || (k == "PUTUMAYO") || (k == "VAUPES")){
       dic_region[["Amazonia"]] = rbind(dic_region[["Amazonia"]], dic_dept[[k]])
-        #dic_dept[["AMAZONAS"]], dic_dept[["CAQUETA"]], dic_dept[["GUAINIA"]],
-        #dic_dept[["GUAVIARE"]], dic_dept[["PUTUMAYO"]], dic_dept[["VAUPES"]] ) 
-    
+        
     }else if((k == "META") || (k == "VICHADA") || (k == "CASANARE") || (k == "ARAUCA")){
       dic_region[["Orinoquia"]] = rbind(dic_region[["Orinoquia"]], dic_dept[[k]])
-        # dic_dept[["META"]], dic_dept[["VICHADA"]], dic_dept[["CASANARE"]], dic_dept[["ARAUCA"]])
-    }
-  
+    }    
+    
 }
+
 
 
 
 
 #==============================================================================
 # Análisis descriptivo de los datos
-summary(Xpunt)
 
 # Histogramas de cada una de las competencias evaluadas y del puntaje total
 
 # para el global
-ggplot(puntajes, aes(x=puntajes$punt_global)) + geom_histogram(color="black", fill="gray",binwidth = 5)
+ggplot(df18, aes(x=df18$punt_global)) + geom_histogram(color="black", fill="gray",binwidth = 5)
 
 # para lectura critica
-ggplot(puntajes, aes(x=puntajes$punt_lectura_critica)) + geom_histogram(color="black", fill="coral3",binwidth = 2)
+ggplot(df18, aes(x=df18$punt_lectura_critica)) + geom_histogram(color="black", fill="coral3",binwidth = 2)
 
 # para matemáticas
-ggplot(puntajes, aes(x=puntajes$punt_matematicas)) + geom_histogram(color="black", fill="chartreuse4",binwidth = 2)
+ggplot(df18, aes(x=df18$punt_matematicas)) + geom_histogram(color="black", fill="chartreuse4",binwidth = 2)
 
 # para ciencias naturales
-ggplot(puntajes, aes(x=puntajes$punt_c_naturales)) + geom_histogram(color="black", fill="dodgerblue3",binwidth = 2)
+ggplot(df18, aes(x=df18$punt_c_naturales)) + geom_histogram(color="black", fill="dodgerblue3",binwidth = 2)
 
 # para sociales y ciudadanas
-ggplot(puntajes, aes(x=puntajes$punt_sociales_ciudadanas)) + geom_histogram(color="black", fill="darkorchid4", binwidth = 3)
+ggplot(df18, aes(x=df18$punt_sociales_ciudadanas)) + geom_histogram(color="black", fill="darkorchid4", binwidth = 3)
 
 #para ingles
-ggplot(puntajes, aes(x=puntajes$punt_ingles)) + geom_histogram(color="black", fill="gold", binwidth = 2)
+ggplot(df18, aes(x=df18$punt_ingles)) + geom_histogram(color="black", fill="gold", binwidth = 2)
 
 #==============================================================================
 # 3) Relacion entre competencias evaluadas: análisis canónico de correlaciones
@@ -214,14 +232,34 @@ cor(Xpunt)
 #========================================================================================
 #========================================================================================
 
-# Regresiones lineales, como responde variable Y con respecto a las otras cuatro variables
-#View(Xpunt)
-#which(is.na(Xpunt[,5]))
-#pairs(Xpunt)
-#Xpunt[1:as.integer(nrow(Xpunt)/3),] # reduciendo al primer tercio de datos
-#df_Xpunt <- data.frame(Xpunt[,1:5])
+# Regresiones lineales
+# Para cada region
 
-# 1 graficas de regresiones por region: correlacion entre ciencias naturales y matemáticas
+# df18 en las competencias son de columna 19 a 23
+getdf18 <- function(df){
+  # funcion que retorna matriz con los 5 componentes evaluados
+  mat = data.matrix(df[,19:23])
+  
+  return(mat)
+}
+
+arreglarNAIngles(dic_region[["Caribe"]])
+
+
+
+for (k in (keys(dic_region))) {
+  print(k)
+  print("Correlacion entre competencias")
+  corr <-cor(dic_region[[k]][,19:23])
+  colnames(corr) <- c("LC","Math","CN","SC","I")
+  rownames(corr) <- c("LC","Math","CN","SC","I")
+  print(corr)
+  print("============================================================")
+  
+}
+
+
+# 1 grafica de regresion por region: correlacion entre ciencias naturales y matemáticas
 # Amazonia
 linmod1 <- lm(punt_lectura_critica ~ punt_c_naturales, data = dic_region[["Amazonia"]])
 summary(linmod1)
@@ -257,88 +295,15 @@ summary(linmod5)
 ggplot(dic_region[["Pacifico"]], aes(x=punt_lectura_critica, y=punt_c_naturales)) + geom_point() + geom_abline(intercept = linmod5$coefficients[1],
                                                                                                                slope = linmod5$coefficients[2],col="red" )+ ggtitle("Relacion entre Lectura crítica y Ciencias naturales en la región Pacífico ")
 
-# Caso 1: Y: lectura critica,
-Ya <- Xpunt[,1]
-Za <- Xpunt[,2:5]
-Za <- cbind(rep(1,length(Ya)), Za)
-
-Bga <- solve(t(Za)%*%Za)%*%t(Za)%*%Ya
-Yga <- Za%*%Bga
-Ea <- Ya - Yga
-
-
-ggplot(df_Xpunt, aes(x=df_Xpunt$punt_lectura_critica, y=df_Xpunt$punt_matematicas)) + geom_point()
-
-
-# Caso 2: Y: matemáticas
-Yb <- Xpunt[,2]
-Zb <- Xpunt[,c(1,3,4,5)]
-Zb <- cbind(rep(1,length(Yb)), Zb)
-
-Bgb <- solve(t(Zb)%*%Zb)%*%t(Zb)%*%Yb
-Ygb <- Zb%*%Bgb
-Eb <- Yb - Ygb
-
-# Caso 3: c_naturales
-Yc <- Xpunt[,3]
-Zc <- Xpunt[,c(1,2,4,5)]
-Zc <- cbind(rep(1,length(Yc)), Zc)
-
-Bgc <- solve(t(Zc)%*%Zc)%*%t(Zc)%*%Yc
-Ygc <- Zc%*%Bgc
-Ec <- Yc - Ygc
-
-# Caso 4: sociales y ciudadanas
-Yd <- Xpunt[,4]
-Zd <- Xpunt[,c(1,2,3,5)]
-Zd <- cbind(rep(1,length(Yd)), Zd)
-
-Bgd <- solve(t(Zd)%*%Zd)%*%t(Zd)%*%Yd
-Ygd <- Zd%*%Bgd
-Ed <- Yd - Ygd
-
-# Caso 5: ingles
-Ye <- Xpunt[,5]
-Ze <- Xpunt[,c(1,2,3,4)]
-Ze <- cbind(rep(1,length(Ye)), Ze)
-
-Bge <- solve(t(Ze)%*%Ze)%*%t(Ze)%*%Ye
-Yge <- Ze%*%Bge
-Ee <- Ye - Yge
-# _______________________________________________________________________________________
-# Para cada region
-# puntajes en las competencias son de columna 19 a 23
-getPuntajes <- function(df){
-  # funcion que retorna matriz con los 5 componentes evaluados
-  mat = data.matrix(df[,19:23])
-  
-  return(mat)
-}
-
-arreglarNAIngles(dic_region[["Caribe"]])
-
-
-
-for (k in keys(dic_region)) {
-  print(k)
-  print("Correlacion entre competencias")
-  corr <-cor(dic_region[[k]][,19:23])
-  colnames(corr) <- c("LC","Math","CN","SC","I")
-  rownames(corr) <- c("LC","Math","CN","SC","I")
-  print(corr)
-  print("============================================================")
-  
-}
-
-# graficas de puntos y rectas de regresión lineal
-
-
 
 
 #========================================================================================
 #========================================================================================
 #========================================================================================
 # Análisis de componentes principales
+
+
+
 Xcp <- Xpunt[,1:5]
 sds <- diag(cov(Xcp))
 S <- cov(Xcp)
@@ -348,57 +313,102 @@ e <- eigen(S)$vectors
 # proporciones de varianza capturada por las componentes principales
 prop <- lam/sum(lam)
 corYi_Xk <- function(i,k){
-  # correlacion entre la i-esima componente principal y la k-esima variable
+  # correlacion entre la i-esima componente principal y la (k-esima variable
   eik = e[k,i]
-  #print("eik:")
-  #print(e[k,i])
+  #print("ei(k:")
+  #print(e[(k,i])
   
   li = lam[i]
   #print("sqrt(li)")
   #print(sqrt(li))
   
-  #print("sqrt(Skk)")
-  #print(sqrt(S[k,k]))
-  return((eik*sqrt(li))/sqrt(S[k,k])) 
+  #print("sqrt(S(k(k)")
+  #print(sqrt(S[(k,(k]))
+  return((ei(k*sqrt(li))/sqrt(S[(k,(k])) 
 }
 
-matCor_Yi_Xk <- c()
+matCor_Yi_X(k <- c()
 for (i in 1:5) {
   # i: indices de PC filas
-  for (k in 1:5) {
-    # k: indices de las X COLUMNAS
-    matCor_Yi_Xk <- c(matCor_Yi_Xk, corYi_Xk(i,k))
+  for ((k in 1:5) {
+    # (k: indices de las X COLUMNAS
+    matCor_Yi_X(k <- c(matCor_Yi_X(k, corYi_X(k(i,(k))
   }
 }
 
 
 
 
-matCor_Yi_Xk <- matrix(matCor_Yi_Xk,nrow = 5, byrow = TRUE)
-colnames(matCor_Yi_Xk) <- colnames(Xcp)
-rownames(matCor_Yi_Xk) <- c("Y1","Y2","Y3","Y4","Y5")
+matCor_Yi_X(k <- matrix(matCor_Yi_X(k,nrow = 5, byrow = TRUE)
+colnames(matCor_Yi_X(k) <- colnames(Xcp)
+rownames(matCor_Yi_X(k) <- c("Y1","Y2","Y3","Y4","Y5")
 
 #----------------------------------------------------------------------------------------
 # PCA guiandose de datacamp
-# se hizo PCA con los datos estandarizados
-df_Xpunt.pca <- prcomp(df_Xpunt, center = TRUE, scale. = TRUE)
-summary(df_Xpunt.pca)
+pca_todo <- prcomp(df18[,19:23], center = TRUE, scale. = TRUE)
+summary(pca_todo)
+# HACER pca PARA CADA REGIÓN
+# se hace PCA con los datos estandarizados
+pca_Amazonia <- prcomp(dic_region[["Amazonia"]][,19:23], center = TRUE, scale. = TRUE)
+summary(pca_Amazonia)
 
+pca_Andina <- prcomp(dic_region[["Andina"]][,19:23], center = TRUE, scale. = TRUE)
+summary(pca_Andina)
+
+pca_Caribe <- prcomp(dic_region[["Caribe"]][,19:23], center = TRUE, scale. = TRUE)
+summary(pca_Caribe)
+
+pca_Orinoquia <- prcomp(dic_region[["Orinoquia"]][,19:23], center = TRUE, scale. = TRUE)
+summary(pca_Orinoquia)
+
+pca_Pacifico <- prcomp(dic_region[["Pacifico"]][,19:23], center = TRUE, scale. = TRUE)
+summary(pca_Pacifico)
 # Tenemos 5 componentes principales
-# la 1era componente acumula práctimaente el 80% de la varianza de los datos
+# la 1era componente acumula aproximádamente el 77% de la varianza de los datos
 # la 2da componente acumula 7% de la varianza de los datos
 # la 3ra componente acumula 5,7% de la varianza de los datos
 # la 4ta componente acumula 4.1% de la varianza de los datos
-# la 5ta componente acumula 3.2% de la varianza de los datos
+# la 5ta componente acumula 3.5% de la varianza de los datos
 
-str(df_Xpunt.pca)
-df_Xpunt.pca$rotation
-
+pca_Amazonia$rotation
+pca_Andina$rotation
+pca_Caribe$rotation
+pca_Orinoquia$rotation
+pca_Pacifico$rotation
 # plotting PCA
 install.packages("remotes")
 remotes::install_github("vqv/ggbiplot")
 library(ggbiplot)
+library(ggfortify)
 
-grid::current.viewport()
-pca_Plot <- ggbiplot(df_Xpunt.pca)
-pca_Plot
+df2 <- rbind(df18_1,df18_2)
+
+
+getPercentageofDF <- function(p,df){
+  idx <- sample.int(1:nrow(df),as.integer(nrow(df)*p))
+  return(df[idx,])
+}
+
+
+# con paquete ggfortify
+autoplot(pca_Amazonia, data = dic_region[["Amazonia"]],
+         loadings = TRUE,loadings.label = TRUE) + ggtitle("Datos en funcion de PC1 y PC2 en Amazonia")
+
+autoplot(pca_Andina, data = dic_region[["Andina"]],
+         loadings = TRUE,loadings.label = TRUE) + ggtitle("Datos en funcion de PC1 y PC2 en region Andina")
+
+autoplot(pca_Caribe, data = dic_region[["Caribe"]],
+         loadings = TRUE,loadings.label = TRUE) + ggtitle("Datos en funcion de PC1 y PC2 en Caribe")
+
+autoplot(pca_Orinoquia, data = dic_region[["Orinoquia"]],
+         loadings = TRUE,loadings.label = TRUE) + ggtitle("Datos en funcion de PC1 y PC2 en Orinoquia")
+
+autoplot(pca_Pacifico, data = dic_region[["Pacifico"]],
+         loadings = TRUE,loadings.label = TRUE) + ggtitle("Datos en funcion de PC1 y PC2 en Pacifico")
+
+
+
+#===========================================================================
+#===========================================================================
+#===========================================================================
+# comparacion de medias (ANOVA Y MANOVA)
