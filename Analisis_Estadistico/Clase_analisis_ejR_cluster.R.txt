@@ -1,0 +1,34 @@
+rm(list = ls())
+
+data(mtcars)
+
+mtcarsz <-as.data.frame(scale(mtcars))
+
+
+dis <- dist(mtcarsz, method = "euclidean")
+
+hcs <- hclust(dis, method = "single")
+hcc <- hclust(dis, method = "complete")
+hca <- hclust(dis, method = "average")
+hcw <- hclust(dis, method = "ward.D")
+
+plot(hcs, hang = -1)
+rect.hclust(hcs, k=10, border="red")
+plot(hcc, hang = -1)
+plot(hca, hang = -1)
+plot(hcw, hang = -1)
+
+#Para grupar variables se usa la correlación
+cormt <- cov(mtcarsz)
+dis_c <- as.dist(1 - cormt)
+
+hcs_v <- hclust(dis_c, method = "single")
+hcc_v <- hclust(dis_c, method = "complete")
+hca_v <- hclust(dis_c, method = "average")
+hcw_V <- hclust(dis_c, method = "ward.D")
+
+plot(hcs_v, hang = -1)
+rect.hclust(hcs_v, k=2, border="red")
+plot(hcc_v, hang = -1)
+plot(hca_v, hang = -1)
+plot(hcw_V, hang = -1)

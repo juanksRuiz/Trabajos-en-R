@@ -2,15 +2,15 @@ install.packages("ggplot2")
 install.packages("dplyr")
 library("ggplot2")
 library("dplyr")
-#df18_1 <- read.csv(file = "C:\\Users\\juank\\Downloads\\BasesDeDatos_proyecto_AED\\Saber_11__2018_1.csv", encoding="UTF-8",header = TRUE)
+df18_1 <- read.csv(file = "C:\\Users\\juank\\Downloads\\BasesDeDatos_proyecto_AED\\Saber_11__2018_1.csv", encoding="UTF-8",header = TRUE)
 # en Hipathia
-df18_1 <- read.csv(file = "C:\\Users\\prestamour\\Downloads\\BasesDeDatos_proyecto_AED\\BasesDeDatos_proyecto_AED\\Saber_11__2018_1.csv", encoding="UTF-8", header=TRUE)
+#df18_1 <- read.csv(file = "C:\\Users\\prestamour\\Downloads\\BasesDeDatos_proyecto_AED\\BasesDeDatos_proyecto_AED\\Saber_11__2018_1.csv", encoding="UTF-8", header=TRUE)
 col1 = c(3,17:21,28:35,50,56,60,61,67, 70,73, 76,79,82,58,59)
 df18_1 <- df18_1[,col1]
 colnames(df18_1)
-#df18_2 <- read.csv(file = "C:\\Users\\juank\\Downloads\\BasesDeDatos_proyecto_AED\\Saber_11__2018_2.csv", encoding="UTF-8", header = TRUE)
+df18_2 <- read.csv(file = "C:\\Users\\juank\\Downloads\\BasesDeDatos_proyecto_AED\\Saber_11__2018_2.csv", encoding="UTF-8", header = TRUE)
 # en Hipathia
-df18_2 <- read.csv(file = "C:\\Users\\prestamour\\Downloads\\BasesDeDatos_proyecto_AED\\BasesDeDatos_proyecto_AED\\Saber_11__2018_2.csv", encoding="UTF-8", header=TRUE)
+#df18_2 <- read.csv(file = "C:\\Users\\prestamour\\Downloads\\BasesDeDatos_proyecto_AED\\BasesDeDatos_proyecto_AED\\Saber_11__2018_2.csv", encoding="UTF-8", header=TRUE)
 colnames(df18_2) <- tolower(colnames(df18_2))
 col2 <- c(3,12:16,23:30,45,51,55:56,62, 65, 68, 71,74,77,53,54)
 df18_2 <- df18_2[,col2]
@@ -51,7 +51,7 @@ for (i in 1:nrow(df18)) {
   }else if (df18$cole_depto_ubicacion[i] %in% c("ATLANTICO","BOLIVAR","CESAR","CORDOBA","LA GUAJIRA","MAGDALENA","SAN ANDRES")){
     cole_region <- c(cole_region, "Caribe")
     
-  }else if(df18$cole_depto_ubicacion[i] %in% c("CHOCO","VALLE","CAUCA","NARIÃ‘O")){
+  }else if(df18$cole_depto_ubicacion[i] %in% c("CHOCO","VALLE","CAUCA","NARIÃÑO")){
     cole_region <- c(cole_region, "Pacifico")
     
   }else if (df18$cole_depto_ubicacion[i] %in% c("AMAZONAS","CAQUETA","GUAINIA","GUAVIARE","PUTUMAYO","VAUPES")){
@@ -112,7 +112,7 @@ for (k in (keys(dic_dept))) {
               || (k == "SAN ANDRES")){
       dic_region[["Caribe"]] = rbind(dic_region[["Caribe"]], dic_dept[[k]])
         
-    }else if((k == "CHOCO") || (k == "VALLE") || (k == "CAUCA") || (k == "NARIÃÑO")){
+    }else if((k == "CHOCO") || (k == "VALLE") || (k == "CAUCA") || (k == "NARI??O")){
       dic_region[["Pacifico"]] = rbind(dic_region[["Pacifico"]], dic_dept[[k]])
         
     }else if ((k == "AMAZONAS") || (k == "CAQUETA") || (k == "GUAINIA") 
@@ -131,6 +131,8 @@ for (k in (keys(dic_dept))) {
 
 #==============================================================================
 # AnÃ¡lisis descriptivo de los datos
+summary(df18[,19:24])
+mean(diag(var(df18[,19:23])))
 
 # Histogramas de cada una de las competencias evaluadas y del puntaje total
 
@@ -138,10 +140,10 @@ for (k in (keys(dic_dept))) {
 ggplot(df18, aes(x=df18$punt_global)) + geom_histogram(color="black", fill="gray",binwidth = 5) + ggtitle("Histograma del puntaje global")
 
 # para lectura critica
-ggplot(df18, aes(x=df18$punt_lectura_critica)) + geom_histogram(color="black", fill="coral3",binwidth = 2)+ ggtitle("Histograma del puntaje  en lectura crítica")
+ggplot(df18, aes(x=df18$punt_lectura_critica)) + geom_histogram(color="black", fill="coral3",binwidth = 2)+ ggtitle("Histograma del puntaje  en lectura cr?tica")
 
 # para matemÃ¡ticas
-ggplot(df18, aes(x=df18$punt_matematicas)) + geom_histogram(color="black", fill="chartreuse4",binwidth = 2) + ggtitle("Histograma del puntaje en Matemáticas")
+ggplot(df18, aes(x=df18$punt_matematicas)) + geom_histogram(color="black", fill="chartreuse4",binwidth = 2) + ggtitle("Histograma del puntaje en Matem?ticas")
 
 # para ciencias naturales
 ggplot(df18, aes(x=df18$punt_c_naturales)) + geom_histogram(color="black", fill="dodgerblue3",binwidth = 2)+ ggtitle("Histograma del puntaje  en Ciencias Naturales")
@@ -265,38 +267,38 @@ for (k in (keys(dic_region))) {
 
 # 1 grafica de regresion por region: correlacion entre ciencias naturales y matemÃ¡ticas
 # Amazonia
-linmod1 <- lm(punt_lectura_critica ~ punt_c_naturales, data = dic_region[["Amazonia"]])
+linmod1 <- lm(punt_sociales_ciudadanas ~ punt_c_naturales, data = dic_region[["Amazonia"]])
 summary(linmod1)
 
-ggplot(dic_region[["Amazonia"]], aes(x=punt_lectura_critica, y=punt_c_naturales)) + geom_point() + geom_abline(intercept = linmod1$coefficients[1], slope = linmod1$coefficients[2],col="red" )+ ggtitle("Relacion entre Lectura crÃ­tica y Ciencias naturales en la regiÃ³n Amazonia ")
+ggplot(dic_region[["Amazonia"]], aes(x=punt_sociales_ciudadanas, y=punt_c_naturales)) + geom_point() + geom_abline(intercept = linmod1$coefficients[1], slope = linmod1$coefficients[2],col="red" )+ ggtitle("Relacion entre Lectura crÃ­tica y Ciencias naturales en la regiÃ³n Amazonia ")
 
 
 # Andina
-linmod2 <- lm(punt_lectura_critica ~ punt_c_naturales, data = dic_region[["Andina"]])
+linmod2 <- lm(punt_sociales_ciudadanas ~ punt_c_naturales, data = dic_region[["Andina"]])
 summary(linmod2)
 
-ggplot(dic_region[["Andina"]], aes(x=punt_lectura_critica, y=punt_c_naturales)) + geom_point() + geom_abline(intercept = linmod2$coefficients[1],
+ggplot(dic_region[["Andina"]], aes(x=punt_sociales_ciudadanas, y=punt_c_naturales)) + geom_point() + geom_abline(intercept = linmod2$coefficients[1],
                                                                                                              slope = linmod2$coefficients[2],col="red" )+ ggtitle("Relacion entre Lectura crÃ­tica y Ciencias naturales en la regiÃ³n Andina")
 
 # Caribe
-linmod3 <- lm(punt_lectura_critica ~ punt_c_naturales, data = dic_region[["Caribe"]])
+linmod3 <- lm(punt_sociales_ciudadanas ~ punt_c_naturales, data = dic_region[["Caribe"]])
 summary(linmod3)
 
-ggplot(dic_region[["Caribe"]], aes(x=punt_lectura_critica, y=punt_c_naturales)) + geom_point() + geom_abline(intercept = linmod3$coefficients[1],
+ggplot(dic_region[["Caribe"]], aes(x=punt_sociales_ciudadanas, y=punt_c_naturales)) + geom_point() + geom_abline(intercept = linmod3$coefficients[1],
                                                                                                              slope = linmod3$coefficients[2],col="red" )+ ggtitle("Relacion entre Lectura crÃ­tica y Ciencias naturales en la regiÃ³n Caribe ")
 
 # Orinoquia
-linmod4 <- lm(punt_lectura_critica ~ punt_c_naturales, data = dic_region[["Orinoquia"]])
+linmod4 <- lm(punt_sociales_ciudadanas ~ punt_c_naturales, data = dic_region[["Orinoquia"]])
 summary(linmod4)
 
-ggplot(dic_region[["Orinoquia"]], aes(x=punt_lectura_critica, y=punt_c_naturales)) + geom_point() + geom_abline(intercept = linmod4$coefficients[1],
+ggplot(dic_region[["Orinoquia"]], aes(x=punt_sociales_ciudadanas, y=punt_c_naturales)) + geom_point() + geom_abline(intercept = linmod4$coefficients[1],
                                                                                                                 slope = linmod4$coefficients[2],col="red" )+ ggtitle("Relacion entre Lectura crÃ­tica y Ciencias naturales en la regiÃ³n Orinoquia ")
 
 # Pacifico
-linmod5 <- lm(punt_lectura_critica ~ punt_c_naturales, data = dic_region[["Pacifico"]])
+linmod5 <- lm(punt_sociales_ciudadanas ~ punt_c_naturales, data = dic_region[["Pacifico"]])
 summary(linmod5)
 
-ggplot(dic_region[["Pacifico"]], aes(x=punt_lectura_critica, y=punt_c_naturales)) + geom_point() + geom_abline(intercept = linmod5$coefficients[1],
+ggplot(dic_region[["Pacifico"]], aes(x=punt_sociales_ciudadanas, y=punt_c_naturales)) + geom_point() + geom_abline(intercept = linmod5$coefficients[1],
                                                                                                                slope = linmod5$coefficients[2],col="red" )+ ggtitle("Relacion entre Lectura crÃ­tica y Ciencias naturales en la regiÃ³n PacÃ­fico ")
 
 
@@ -310,10 +312,13 @@ ggplot(dic_region[["Pacifico"]], aes(x=punt_lectura_critica, y=punt_c_naturales)
 # PCA guiandose de datacamp
 pca_todo <- prcomp(df18[,19:23], center = TRUE, scale. = TRUE)
 pca_todo$rotation
+
 # HACER pca PARA CADA REGIÃ“N
 # se hace PCA con los datos estandarizados
 pca_Amazonia <- prcomp(dic_region[["Amazonia"]][,19:23], center = TRUE, scale. = TRUE)
+S1 <- cov(dic_region[["Amazonia"]][,19:23])
 summary(pca_Amazonia)
+e1 <- eigen(S1)$vectors
 
 pca_Andina <- prcomp(dic_region[["Andina"]][,19:23], center = TRUE, scale. = TRUE)
 summary(pca_Andina)
@@ -375,8 +380,8 @@ require(graphics)
 install.packages("fitdistrplus")
 library(fitdistrplus)
 
-# Sólo para la región Andina que cubre la mayoría de la población
-# el fit no cuadra para inglés
+# S?lo para la regi?n Andina que cubre la mayor?a de la poblaci?n
+# el fit no cuadra para ingl?s
 fit.normAndina <- fitdist(dic_region[["Andina"]]$punt_ingles, distr = "norm", method = "mle")
 plot(fit.normAndina)
 
@@ -384,13 +389,13 @@ plot(fit.normAndina)
 fit.normAndinaSC <- fitdist(dic_region[["Andina"]]$punt_sociales_ciudadanas, distr = "norm", method = "mle")
 plot(fit.normAndinaSC)
 
-# las distribuciones no se ajustan luego no siguen una distribución normal
+# las distribuciones no se ajustan luego no siguen una distribuci?n normal
 
 
 #__________________________________
 # Manova test
 # entre departamentos
-# Sólo nos quedamos con Lectura crítica, Ciencias Naturales y Matemáticas
+# S?lo nos quedamos con Lectura cr?tica, Ciencias Naturales y Matem?ticas
 
 # H0: todos los efectos de tratamiento (tao_1, ... ,tao_g) son iguales a 0 Para las 3 variables/competencias
 # Las variables independientes son las competencias evaluadas, la dependiente es el departmento donde se ubica el colegio
@@ -405,7 +410,7 @@ summary(res_manova,test = "Wilks")
 
 Wilks <- 0.91739
 n <- nrow(df18)
-# p: número de variables
+# p: n?mero de variables
 p <- 3
 g <- 33 # numero de pobalciones/grupos
 
@@ -452,7 +457,7 @@ summary(res_manova,test = "Wilks")
 w2 <- 0.94942
 
 isTratamientosIguala_0(w2, nrow(dic_region[["Amazonia"]]),3,6,alfa) # TRUE
-# los tratamientos son distintos en la región Amazonia
+# los tratamientos son distintos en la regi?n Amazonia
 
 
 # Para la region Caribe
@@ -465,10 +470,10 @@ summary(res_manova,test = "Wilks")
 w3 <- 0.96368
 
 isTratamientosIguala_0(w3, nrow(dic_region[["Caribe"]]),3,7,alfa) # = TRUE
-# los tratamientos son distintoas ára la región Caribe
+# los tratamientos son distintoas ?ra la regi?n Caribe
 
 
-# pARA LA REGIÓN PACPIFICO
+# pARA LA REGI?N PACPIFICO
 pLC <- dic_region[["Pacifico"]]$punt_lectura_critica
 pM <- dic_region[["Pacifico"]]$punt_matematicas
 pCN <- dic_region[["Pacifico"]]$punt_c_naturales
@@ -493,7 +498,109 @@ isTratamientosIguala_0(w5, nrow(dic_region[["Orinoquia"]]), 3, 4, alfa) # TRUE
 # los tratamientos son distintos de 0 para la regioin Orinoquia
 
 # En consecuencia, independientemente de la region, hay diferencias en los tratamientos es decir que  para
-# las competencias lectura crítica, matemáticas y Ciencias Naturales se comportan distintamente en cada departamento,
-# por sus condiciones económicas, su contexto social 
+# las competencias lectura cr?tica, matem?ticas y Ciencias Naturales se comportan distintamente en cada departamento,
+# por sus condiciones econ?micas, su contexto social 
 
 
+
+#==========================================================================================
+#==========================================================================================
+#==========================================================================================
+# Agrupamiento
+# Para cada region
+# agrupamiento con kmeans
+library(factoextra)
+kAndina <- kmeans(dic_region[["Andina"]][,19:23], centers = 8)
+fviz_cluster(kAndina, data=dic_region[["Andina"]][,19:23], geom="point", ellipse.type = "norm")
+
+table(dic_region[["Andina"]]$fami_estratovivienda, kAndina$cluster)
+
+
+kAmazonia <- kmeans(dic_region[["Amazonia"]][,19:23], centers = 6)
+fviz_cluster(kAmazonia, data=dic_region[["Amazonia"]][,19:23], geom="point")
+
+#==========================================================================================
+#==========================================================================================
+#==========================================================================================
+# Se quiere ver que caracteristicas tienen los individuos que tienen puntaje 0 o 100 en
+# cada competencia
+library(plyr)
+f <- c()
+
+for (i in 7:14) {
+  levels(df18[,i]) <- c(NaN,FALSE,TRUE)
+  c <- count(df18[,i])
+  f <- cbind(f,c$freq)
+}
+
+rownames(f) <- c("NaN", "TRUE", "FALSE")
+colnames(f) <- colnames(df18)[7:14]
+
+# Primero los que les fue bien:
+# Sobre la poblacion total:
+
+LC100 <- subset(df18,df18$punt_lectura_critica == 100)
+f1 <- c()
+
+for (i in 7:14) {
+  levels(LC100[,i]) <- c(NaN,FALSE,TRUE)
+  c <- count(LC100[,i])
+  f1 <- cbind(f1,c$freq)
+}
+
+rownames(f1) <- c("NaN", "TRUE", "FALSE")
+colnames(f1) <- colnames(df18)[7:14]
+
+#-------------------------------------
+M100 <- subset(df18,df18$punt_matematicas == 100)
+f2 <- c()
+
+for (i in 7:14) {
+  levels(M100[,i]) <- c(NaN,FALSE,TRUE)
+  c <- count(M100[,i])
+  f2 <- cbind(f2,c$freq)
+}
+rownames(f2) <- c("NaN", "TRUE", "FALSE")
+colnames(f2) <- colnames(df18)[7:14]
+
+
+#--------------------------------------
+CN100 <- subset(df18,df18$punt_c_naturales == 100)
+f3 <- c()
+for (i in 7:14) {
+  levels(CN100[,i]) <- c(NaN,FALSE,TRUE)
+  c <- count(CN100[,i])
+  f3 <- cbind(f3,c$freq)
+}
+
+rownames(f3) <- c("NaN", "TRUE", "FALSE")
+colnames(f3) <- colnames(df18)[7:14]
+
+#--------------------------------------
+SC100 <- subset(df18,df18$punt_sociales_ciudadanas == 100)
+f4 <- c()
+
+for (i in 7:14) {
+  levels(SC100[,i]) <- c(NaN,FALSE,TRUE)
+  c <- count(SC100[,i])
+  f4 <- cbind(f4,c$freq)
+}
+
+rownames(f4) <- c("NaN", "TRUE", "FALSE")
+colnames(f4) <- colnames(df18)[7:14]
+
+#----------------------------------------
+I100 <- subset(df18,df18$punt_ingles == 100)
+f5 <- c()
+
+for (i in 7:14) {
+  levels(I100[,i]) <- c(NaN,FALSE,TRUE)
+  c <- count(I100[,i])
+  f5 <- cbind(f5,c$freq)
+}
+
+rownames(f5) <- c("NaN", "TRUE", "FALSE")
+colnames(f5) <- colnames(df18)[7:14]
+
+
+barplot(f1,main = "Diagrama en barras de los que sacaron 100 en Lectura critica")
