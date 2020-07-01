@@ -1,0 +1,478 @@
+# lectuta de archivos .csv
+
+# Para archivo datosmarkov.csv
+# El comando de abajo es para indicar la carpeta en la cual esta este archivo y 
+# los archivos .csv
+# Hay que poner doble \ para que lea bien la direccion
+setwd("C:\\Users\\juank\\Desktop\\Trabajos-en-R\\Markov_Maria\\")
+
+#Archivos cuantitativos
+df_mc_pt1 <- read.csv("data\\datos_cuantitativos\\markovcuantitpte1.csv",header = TRUE,sep = ";",fill = TRUE)
+head(df_mc_pt1)
+#Limpieza de archivos
+df_mc_pt1[8:10] = list(NULL)
+head(df_mc_pt1)
+
+df_mc_pt2 <- read.csv("data\\datos_cuantitativos\\markovcuantitpte2.csv",
+                      header=TRUE,sep=";",fill=TRUE)
+head(df_mc_pt2)
+
+df_mc_pt3 <- read.csv("data\\datos_cuantitativos\\markovcuantitpte3.csv",header=TRUE,sep=";",fill=TRUE)
+head(df_mc_pt3)
+
+df_mc_pt4 <- read.csv("data\\datos_cuantitativos\\markovcuantitpte4.csv",
+                      header=TRUE,sep=";",fill=TRUE)
+head(df_mc_pt4)
+#------------------------------------------------------------------------------
+df_mc_pt6 <- read.csv("data\\datos_cuantitativos\\markovcuantitpte6.csv",
+                      header = TRUE, sep=";",fill = TRUE)
+head(df_mc_pt6)
+# No tiene la columna ESTADOS
+
+df_mc_pt7 <- read.csv("data\\datos_cuantitativos\\markovcuantitpte7.csv",
+                      header = TRUE, sep=";",fill = TRUE)
+head(df_mc_pt7)
+
+df_mc_pt8 <- read.csv("data\\datos_cuantitativos\\markovcuantitpte8.csv",
+                      header = TRUE, sep=";",fill = TRUE)
+head(df_mc_pt8)
+
+df_mc_pt9 <- read.csv("data\\datos_cuantitativos\\markovcuantitpte9.csv",
+                      header = TRUE, sep=";",fill = TRUE)
+head(df_mc_pt9)
+
+df_mc_pt10 <- read.csv("data\\datos_cuantitativos\\markovcuantitpte10.csv",
+                      header = TRUE, sep=";",fill = TRUE)
+head(df_mc_pt10)
+
+df_mc_pt11 <- read.csv("data\\datos_cuantitativos\\markovcuantitpte11.csv",
+                      header = TRUE, sep=";",fill = TRUE)
+head(df_mc_pt11)
+
+df_mc_pt12 <- read.csv("data\\datos_cuantitativos\\markovcuantitpte12.csv",
+                      header = TRUE, sep=";",fill = TRUE)
+head(df_mc_pt12)
+
+df_mc_pt13 <- read.csv("data\\datos_cuantitativos\\markovcuantitpte13.csv",
+                      header = TRUE, sep=";",fill = TRUE)
+head(df_mc_pt13)
+
+df_mc_pt14 <- read.csv("data\\datos_cuantitativos\\markovcuantitpte14.csv",
+                      header = TRUE, sep=";",fill = TRUE)
+head(df_mc_pt14)
+# Los estados estan en letras
+
+#==============================================================================
+# Archivos nominales
+# Para archivo markovnominalpte1.csv
+df_mn_pt1 <- read.csv("data\\datos_nominales\\markovnominalpte1.csv",
+                      header=TRUE,sep=";",fill=TRUE)
+head(df_mn_pt1)
+
+# Para archivo markovnominalpte2.csv
+df_mn_pt2 <- read.csv("data\\datos_nominales\\markovnominalpte2.csv",
+                      header=TRUE,sep=";",fill=TRUE)
+colnames(df_mn_pt2)[7] <-"ESTADOS" 
+head(df_mn_pt2)
+
+# Para archivo markovnominalpte3.csv
+df_mn_pt3 <- read.csv("data\\datos_nominales\\markovnominalpte3.csv",header=TRUE,sep=";",fill=TRUE)
+head(df_mn_pt3)
+
+
+# Para archivo markovnominalpte4.csv
+df_mn_pt4 <- read.csv("data\\datos_nominales\\markovnominalpte4.csv",header=TRUE,sep=";",fill=TRUE)
+head(df_mn_pt4)
+#--------------------------------------------------------------------------
+df_mn_pt6 <- read.csv(file="data\\datos_nominales\\markovnominalpte6.csv",
+                      header=TRUE,sep=";",fill = TRUE)
+head(df_mn_pt6)
+
+df_mn_pt7 <- read.csv(file="data\\datos_nominales\\markovnominalpte7.csv",
+                      header=TRUE,sep=";",fill = TRUE)
+head(df_mn_pt7)
+
+df_mn_pt8 <- read.csv(file="data\\datos_nominales\\markovnominal8.csv",
+                      header=TRUE,sep=";",fill = TRUE)
+head(df_mn_pt8)
+
+df_mn_pt9 <- read.csv(file="data\\datos_nominales\\markovnominal9.csv",
+                      header=TRUE,sep=";",fill = TRUE)
+head(df_mn_pt9)
+
+df_mn_pt10 <- read.csv(file="data\\datos_nominales\\markovnominal10.csv",
+                      header=TRUE,sep=";",fill = TRUE)
+head(df_mn_pt10)
+
+df_mn_pt11 <- read.csv(file="data\\datos_nominales\\markovnominal11.csv",
+                      header=TRUE,sep=";",fill = TRUE)
+head(df_mn_pt11)
+
+df_mn_pt12 <- read.csv(file="data\\datos_nominales\\markovnominal12.csv",
+                      header=TRUE,sep=";",fill = TRUE)
+head(df_mn_pt12)
+
+df_mn_pt13 <- read.csv(file="data\\datos_nominales\\markovnominal13.csv",
+                      header=TRUE,sep=";",fill = TRUE)
+head(df_mn_pt13)
+
+df_mn_pt14 <- read.csv(file="data\\datos_nominales\\markovnominalpte14.csv",
+                      header=TRUE,sep=";",fill = TRUE)
+head(df_mn_pt14)
+
+#==============================================================================
+#==============================================================================
+#==============================================================================
+# Cadenas de Markov
+#https://www.youtube.com/watch?v=a9OIedylbUA
+install.packages("markovchain")
+install.packages("diagram")
+library(markovchain)
+library(diagram)
+# Propiedad de Markov
+# https://www.datacamp.com/community/tutorials/markov-chain-analysis-r
+
+#------------------------------------------------------------------------------
+# Funciones
+# Funcion que recibe un data frame y verifica si se cumple la propiedad de Markov
+test_data <- function(df){
+  seq <- c()
+  for (i in 1:dim(df)[1]){
+    seq <- c(seq,df[i,"ESTADOS"])
+  }
+  verifyMarkovProperty(seq)
+  return(seq)
+}
+
+
+# Funcion que recibe una secuencia de estados y retorna una lista con la matriz 
+# de probabilidades de transicion y el objeto cadena de Marjov correspondiente
+probMat_markov <- function(seq){
+  transition_mat <- createSequenceMatrix(seq,toRowProbs = TRUE)
+  colnames(transition_mat) <- c("CRITICO","ESTABLE","INESTABLE","POTENCIAL")
+  rownames(transition_mat) <- colnames(transition_mat)
+  markov <- new('markovchain',
+                transitionMatrix=transition_mat, byrow=T)
+  myList <- list("matrix"=transition_mat,"markovchain"=markov)
+  return(myList)
+}
+
+# Misma Funcion de arriba para datos cuantitativos y no cambia nombre de estados
+probMat_markov_cuantit <- function(seq){
+  transition_mat <- createSequenceMatrix(seq,toRowProbs = TRUE)
+  #colnames(transition_mat) <- c("CRITICO","ESTABLE","INESTABLE","POTENCIAL")
+  #rownames(transition_mat) <- colnames(transition_mat)
+  markov <- new('markovchain',
+                transitionMatrix=transition_mat, byrow=T)
+  myList <- list("matrix"=transition_mat,"markovchain"=markov)
+  return(myList)
+}
+
+#==============================================================================
+# Datos cuantitativos
+# Para datos cuantitativos del paciente 1
+seq_C_1 <- test_data(df_mc_pt1)
+# la indormacion de los estados SI sigue la propiedad de Markov (p-value = 0.9996 > 0.05)
+prob_mk_C1 <- probMat_markov_cuantit(seq_C_1)
+plot(prob_mk_C1$markovchain,main="Probabilidades de transición - datos cuantitativos - paciente 1")
+# Matriz de probabilidades de transicion
+prob_mk_C1$matrix
+write.table(round(prob_mk_C1$matrix,2),
+            file = ".\\matrices\\cuantitativos\\mat_cuantit_1.txt",
+            sep = "\t")
+#______________________________________________________________________________
+# Para datos cuantitativos de paciente 2
+seq_C_2 <- test_data(df_mc_pt2)
+# la indormacion de los estados SI sigue la propiedad de Markov (p-value = 0.20 > 0.05)
+prob_mk_C2 <- probMat_markov_cuantit(seq_C_2)
+plot(prob_mk_C2$markovchain,main="Probabilidades de transición - datos cuantitativos - paciente 2")
+# Matriz de probabilidades de transicion
+prob_mk_C2$matrix
+write.table(round(prob_mk_C2$matrix,2),
+            file = ".\\matrices\\cuantitativos\\mat_cuantit_2.txt",
+            sep = "\t")
+
+#______________________________________________________________________________
+# Para datos cuantitativos de paciente 3
+seq_C_3 <- test_data(df_mc_pt3)
+# la indormacion de los estados SI sigue la propiedad de Markov (p-value = 0.39 > 0.05)
+prob_mk_C3 <- probMat_markov_cuantit(seq_C_3)
+plot(prob_mk_C3$markovchain,main="Probabilidades de transición - datos cuantitativos - paciente 3")
+# Matriz de probabilidades de transicion
+prob_mk_C3$matrix
+write.table(round(prob_mk_C3$matrix,2),
+            file = ".\\matrices\\cuantitativos\\mat_cuantit_3.txt",
+            sep = "\t")
+
+#______________________________________________________________________________
+# Para datos cuantitativos de paciente 4
+seq_C_4 <- test_data(df_mc_pt4)
+# la indormacion de los estados SI sigue la propiedad de Markov (p-value = 0.41> 0.05)
+prob_mk_C4 <- probMat_markov_cuantit(seq_C_4)
+plot(prob_mk_C4$markovchain,main="Probabilidades de transición - datos cuantitativos - paciente 4")
+# Matriz de probabilidades de transicion
+prob_mk_C4$matrix
+write.table(round(prob_mk_C4$matrix,2),
+            file = ".\\matrices\\cuantitativos\\mat_cuantit_4.txt",
+            sep = "\t")
+
+#______________________________________________________________________________
+# Para datos cuantitativos de paciente 6
+# El paciente 6 no tiene la columna estado
+#______________________________________________________________________________
+# Para datos cuantitativos de paciente 7
+seq_C_7 <- test_data(df_mc_pt7)
+# la indormacion de los estados SI sigue la propiedad de Markov (p-value = 0.40> 0.05)
+prob_mk_C7 <- probMat_markov_cuantit(seq_C_7)
+plot(prob_mk_C7$markovchain,main="Probabilidades de transición - datos cuantitativos - paciente 7")
+# Matriz de probabilidades de transicion
+prob_mk_C7$matrix
+write.table(round(prob_mk_C7$matrix,2),
+            file = ".\\matrices\\cuantitativos\\mat_cuantit_7.txt",
+            sep = "\t")
+
+#______________________________________________________________________________
+# Para datos cuantitativos de paciente 8
+seq_C_8 <- test_data(df_mc_pt8)
+# la indormacion de los estados SI sigue la propiedad de Markov (p-value = 0.08> 0.05)
+# AVISO: el p-value es muy pequeño
+prob_mk_C8 <- probMat_markov_cuantit(seq_C_8)
+plot(prob_mk_C8$markovchain,main="Probabilidades de transición - datos cuantitativos - paciente 8")
+# Matriz de probabilidades de transicion
+prob_mk_C8$matrix
+write.table(round(prob_mk_C8$matrix,2),
+            file = ".\\matrices\\cuantitativos\\mat_cuantit_8.txt",
+            sep = "\t")
+
+#______________________________________________________________________________
+# Para datos cuantitativos de paciente 9
+seq_C_9 <- test_data(df_mc_pt9)
+# la indormacion de los estados SI sigue la propiedad de Markov (p-value = 0.82> 0.05)
+prob_mk_C9 <- probMat_markov_cuantit(seq_C_9)
+plot(prob_mk_C9$markovchain,main="Probabilidades de transición - datos cuantitativos - paciente 9")
+# Matriz de probabilidades de transicion
+prob_mk_C9$matrix
+write.table(round(prob_mk_C9$matrix,2),
+            file = ".\\matrices\\cuantitativos\\mat_cuantit_9.txt",
+            sep = "\t")
+
+#______________________________________________________________________________
+# Para datos cuantitativos de paciente 10
+seq_C_10 <- test_data(df_mc_pt10)
+# la indormacion de los estados SI sigue la propiedad de Markov (p-value = 0.21> 0.05)
+prob_mk_C10 <- probMat_markov_cuantit(seq_C_10)
+plot(prob_mk_C10$markovchain,main="Probabilidades de transición - datos cuantitativos - paciente 10")
+# Matriz de probabilidades de transicion
+prob_mk_C10$matrix
+write.table(round(prob_mk_C10$matrix,2),
+            file = ".\\matrices\\cuantitativos\\mat_cuantit_10.txt",
+            sep = "\t")
+
+#______________________________________________________________________________
+# Para datos cuantitativos de paciente 11
+seq_C_11 <- test_data(df_mc_pt11)
+# la indormacion de los estados SI sigue la propiedad de Markov (p-value = 0.74> 0.05)
+prob_mk_C11 <- probMat_markov_cuantit(seq_C_11)
+plot(prob_mk_C11$markovchain,main="Probabilidades de transición - datos cuantitativos - paciente 11")
+# Matriz de probabilidades de transicion
+prob_mk_C11$matrix
+write.table(round(prob_mk_C11$matrix,2),
+            file = ".\\matrices\\cuantitativos\\mat_cuantit_11.txt",
+            sep = "\t")
+
+#______________________________________________________________________________
+# Para datos cuantitativos de paciente 12
+seq_C_12 <- test_data(df_mc_pt12)
+# la indormacion de los estados SI sigue la propiedad de Markov (p-value = 0.74> 0.05)
+prob_mk_C12 <- probMat_markov_cuantit(seq_C_12)
+plot(prob_mk_C11$markovchain,main="Probabilidades de transición - datos cuantitativos - paciente 12")
+# Matriz de probabilidades de transicion
+prob_mk_C12$matrix
+write.table(round(prob_mk_C12$matrix,2),
+            file = ".\\matrices\\cuantitativos\\mat_cuantit_12.txt",
+            sep = "\t")
+
+#______________________________________________________________________________
+# Para datos cuantitativos de paciente 13
+seq_C_13 <- test_data(df_mc_pt13)
+# la indormacion de los estados SI sigue la propiedad de Markov (p-value = 0.99> 0.05)
+prob_mk_C13 <- probMat_markov_cuantit(seq_C_13)
+plot(prob_mk_C13$markovchain,main="Probabilidades de transición - datos cuantitativos - paciente 13")
+# Matriz de probabilidades de transicion
+prob_mk_C13$matrix
+write.table(round(prob_mk_C13$matrix,2),
+            file = ".\\matrices\\cuantitativos\\mat_cuantit_13.txt",
+            sep = "\t")
+
+#______________________________________________________________________________
+# Para datos cuantitativos de paciente 14
+seq_C_14 <- test_data(df_mc_pt14)
+# la indormacion de los estados NO sigue la propiedad de Markov (p-value = 2.42e-6 < 0.05)
+
+#==============================================================================
+#==============================================================================
+# Datos nominales
+# Para datoa nominales del paciente 1 
+seq_N_1 <- test_data(df_mn_pt1)
+# la informacion de los estados NO sigue la propiedad de Markov (p-value = 0.03 < 0.05)
+# Por lo tanto no se hizo más análisis
+#______________________________________________________________________________
+# Para datos nominales del paciente 2
+#revisar nombre de columna estados . cambiarla en el .csv
+seq_N_2 <- test_data(df_mn_pt2) 
+# la iniformacion de los estados SI sigue la propiedad de Markov (p-value = 0.56 > 0.05)
+
+prob_mk2 <- probMat_markov(seq_N_2)
+plot(prob_mk2$markovchain,main="Probabilidades de transicion - datos nominales - paciente 2")
+# Matriz de probabilidades de transicion
+prob_mk2$matrix
+write.table(round(prob_mk2$matrix,2),
+            file = ".\\matrices\\nominales\\mat_nominal_2.txt",
+            sep = "\t")
+
+#___________________________________________________________________________
+# Para datos nominales de paciente 3
+seq_N_3 <- test_data(df_mn_pt3)
+# la indormacion de los estados SI sigue la propiedad de Markov (p-value = 0.20 > 0.05)
+prob_mk3 <- probMat_markov(seq_N_3)
+plot(prob_mk3$markovchain,main="Probabilidades de transición - datos nominales - paciente 3")
+# Matriz de probabilidades de transicion
+prob_mk3$matrix
+write.table(round(prob_mk3$matrix,2),
+            file = ".\\matrices\\nominales\\mat_nominal_3.txt",
+            sep = "\t")
+
+
+
+#______________________________________________________________________________
+# el df_mn_pt4 NO sigue la propiedad de Markov (p-value = 0.02 < 0.05)
+#______________________________________________________________________________
+# Para datos nominales de paciente 6
+seq_N_6 <- test_data(df_mn_pt6)
+t(df_mn_pt6["ESTADOS"])
+# SI tiene la propiedad de Markov (p-value = 0.46 > 0.05)
+prob_mk6 <- probMat_markov(seq_N_6)
+prob_mk6$markovchain
+plot(prob_mk6$markovchain, main = "Probabilidades de transición - datos nominales - paciente 6")
+# Matriz de probabilidades de transicion
+prob_mk6$matrix
+write.table(round(prob_mk6$matrix,2),
+            file = ".\\matrices\\nominales\\mat_nominal_6.txt",
+            sep = "\t")
+
+
+#______________________________________________________________________________
+# Para datos nominales de paciente 7
+seq_N_7 <- test_data(df_mn_pt7)
+t(df_mn_pt7["ESTADOS"])
+# SI tiene la propiedad de Markov (p-value = 0.41 > 0.05)
+prob_mk7 <- probMat_markov(seq_N_7)
+prob_mk7$markovchain
+plot(prob_mk7$markovchain, main = "Probabilidades de transición - datos nominales - paciente 7")
+# Matriz de probabilidades de transicion
+prob_mk7$matrix
+write.table(round(prob_mk7$matrix,2),
+            file = ".\\matrices\\nominales\\mat_nominal_7.txt",
+            sep = "\t")
+
+
+#______________________________________________________________________________
+# Para datos nominales de paciente 8
+seq_N_8 <- test_data(df_mn_pt8)
+t(df_mn_pt8["ESTADOS"])
+# SI tiene la propiedad de Markov (p-value = 0.08 > 0.05)
+# ATENCION: p-value es muy bajo
+prob_mk8 <- probMat_markov(seq_N_8)
+prob_mk8$markovchain
+plot(prob_mk6$markovchain, main = "Probabilidades de transición - datos nominales -  paciente 8")
+# Matriz de probabilidades de transicion
+prob_mk8$matrix
+write.table(round(prob_mk8$matrix,2),
+            file = ".\\matrices\\nominales\\mat_nominal_8.txt",
+            sep = "\t")
+
+
+#______________________________________________________________________________
+# Para datos nominales de paciente 9
+seq_N_9 <- test_data(df_mn_pt9)
+t(df_mn_pt9["ESTADOS"])
+# SI tiene la propiedad de Markov (p-value = 0.83 > 0.05)
+prob_mk9 <- probMat_markov(seq_N_9)
+prob_mk9$markovchain
+plot(prob_mk9$markovchain, main = "Probabilidades de transición - datos nominales - paciente 9")
+# Matriz de probabilidades de transicion
+prob_mk9$matrix
+write.table(round(prob_mk9$matrix,2),
+            file = ".\\matrices\\nominales\\mat_nominal_9.txt",
+            sep = "\t")
+
+
+#______________________________________________________________________________
+# Para datos nominales de paciente 10
+seq_N_10 <- test_data(df_mn_pt10)
+t(df_mn_pt10["ESTADOS"])
+# SI tiene la propiedad de Markov (p-value = 0.051 > 0.05)
+# ATENCION: p-value es muy bajo
+prob_mk10 <- probMat_markov(seq_N_10)
+prob_mk10$markovchain
+plot(prob_mk10$markovchain, main = "Probabilidades de transición - datos nominales - paciente 10")
+# Matriz de probabilidades de transicion
+prob_mk10$matrix
+write.table(round(prob_mk10$matrix,2),
+            file = ".\\matrices\\nominales\\mat_nominal_10.txt",
+            sep = "\t")
+
+
+#______________________________________________________________________________
+# Para datos nominales de paciente 11
+seq_N_11 <- test_data(df_mn_pt11)
+t(df_mn_pt11["ESTADOS"])
+# SI tiene la propiedad de Markov (p-value = 0.74 > 0.05)
+prob_mk11 <- probMat_markov(seq_N_11)
+prob_mk11$markovchain
+plot(prob_mk11$markovchain, main = "Probabilidades de transición - datos nominales  - paciente 11")
+# Matriz de probabilidades de transicion
+prob_mk11$matrix
+write.table(round(prob_mk11$matrix,2),
+            file = ".\\matrices\\nominales\\mat_nominal_11.txt",
+            sep = "\t")
+
+
+#______________________________________________________________________________
+# Para datos nominales de paciente 12
+seq_N_12 <- test_data(df_mn_pt12)
+t(df_mn_pt12["ESTADOS"])
+# SI tiene la propiedad de Markov (p-value = 0.41 > 0.05)
+prob_mk12 <- probMat_markov(seq_N_12)
+prob_mk12$markovchain
+plot(prob_mk12$markovchain, main = "Probabilidades de transición - datos nominales - paciente 12")
+# Matriz de probabilidades de transicion
+prob_mk12$matrix
+write.table(round(prob_mk12$matrix,2),
+            file = ".\\matrices\\nominales\\mat_nominal_12.txt",
+            sep = "\t")
+
+
+#______________________________________________________________________________
+# Para datos nominales de paciente 13
+seq_N_13 <- test_data(df_mn_pt13)
+t(df_mn_pt13["ESTADOS"])
+# SI tiene la propiedad de Markov (p-value = 0.99 > 0.05)
+prob_mk13 <- probMat_markov(seq_N_13)
+prob_mk13$markovchain
+plot(prob_mk13$markovchain, main = "Probabilidades de transición - datos nominales -  paciente 13")
+# Matriz de probabilidades de transicion
+prob_mk13$matrix
+write.table(round(prob_mk13$matrix,2),
+            file = ".\\matrices\\nominales\\mat_nominal_13.txt",
+            sep = "\t")
+
+#______________________________________________________________________________
+# Para datos nominales de paciente 14
+test_data(df_mn_pt14)
+# NO tiene la propiedad de Markov (p-value = 2.42E-06 < 0.05)
+
+
+
+
+

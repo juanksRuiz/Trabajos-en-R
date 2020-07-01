@@ -604,3 +604,28 @@ colnames(f5) <- colnames(df18)[7:14]
 
 
 barplot(f1,main = "Diagrama en barras de los que sacaron 100 en Lectura critica")
+barplot(f2,main = "Diagrama en barras de los que sacaron 100 en Matematicas")
+barplot(f3,main = "Diagrama en barras de los que sacaron 100 en Ciencias Naturales")
+barplot(f4,main = "Diagrama en barras de los que sacaron 100 en Sociales y ciudadanas")
+barplot(f5,main = "Diagrama en barras de los que sacaron 100 en Ingles")
+
+
+#########################################################################################
+
+# De la columna 6 a la 14 y 19 a 24
+dfFinal <- df18[,c(6:14,19:24)]
+
+
+# Para los que tienen internet
+summary(dfFinal)
+DFinternet <- dfFinal[which(dfFinal$fami_tieneinternet!= "-"),]
+as.logical(DFinternet$fami_tieneinternet)
+mylogit1 <- glm(fami_tieneinternet ~ punt_lectura_critica + punt_matematicas + punt_c_naturales + punt_sociales_ciudadanas + punt_ingles, family = "binomial", data = DFinternet)
+
+summary(mylogit1)
+
+glm.probs <- predict(mylogit1, type = "response")
+glm.probs[1:5]
+
+glm.pred <- ifelse(glm.probs > 0.5,"con_internet", "sin_internet" )
+table(glm.pred, DFinternet$fami_tieneinternet)
