@@ -472,7 +472,30 @@ write.table(round(prob_mk13$matrix,2),
 test_data(df_mn_pt14)
 # NO tiene la propiedad de Markov (p-value = 2.42E-06 < 0.05)
 
+#==============================================================================
+#==============================================================================
+#==============================================================================
+# Modelos ocultos de Markov
+# https://cran.r-project.org/web/packages/HMM/HMM.pdf
+# https://www.youtube.com/watch?v=ZFZj527D0Vc&t=5s
+install.packages("HMM")
+library(HMM)
 
+# Para datos cuantitativos:
 
+# Para datos del paciente 1
+# Inicializacion de la HMM
+my_states <- colnames(prob_mk2$matrix)
+# Cuales son las observaciones=
+# cuales son las probabilidades de emision?
 
+symb <- c("1,2,3,4")
+hmm_c1 <- initHMM(States = my_states,Symbols = symb,transProbs = prob_mk2$matrix)
+print(hmm_c1)
+# Sequence of observations
+#obs <- as.character( df_mc_pt2[1:3,"ESTADOS"])
+obs <- c("1") 
+backwardprobs = backward(hmm = hmm_c1,observation = obs)
+# _____________________________________________________________________________
+# Para datos nominales:
 
